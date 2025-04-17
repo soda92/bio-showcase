@@ -21,10 +21,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+SECRET_KEY = os.getenv(
+    'DJANGO_SECRET_KEY',
+    'django-insecure-k60vzg3)e0+0(gjh*r)#de$m5icpw7aaafdj*yr=i13$o%j4)5',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False if os.getenv("DJANGO_PRODUCTION") else True
+DEBUG = False if os.getenv('DJANGO_PRODUCTION') else True
 
 ALLOWED_HOSTS = []
 
@@ -50,7 +53,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'bio_showcase.urls'
+ROOT_URLCONF = 'bio_showcase.bio_showcase.urls'
 
 TEMPLATES = [
     {
@@ -67,7 +70,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'bio_showcase.wsgi.application'
+WSGI_APPLICATION = 'bio_showcase.bio_showcase.wsgi.application'
 
 
 # Database
@@ -103,9 +106,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hans'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
