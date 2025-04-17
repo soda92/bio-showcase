@@ -1,4 +1,4 @@
-import subprocess
+import uvicorn
 from sodatools import CD
 from pathlib import Path
 
@@ -7,7 +7,7 @@ def main():
     cr = Path(__file__).resolve().parent
     with CD(cr):
         try:
-            subprocess.run("uvicorn bio_showcase.asgi:application", shell=True, check=False)
+            uvicorn.run("bio_showcase.bio_showcase.asgi:application", port=8000, log_level="info")
         except KeyboardInterrupt:
             pass
 
