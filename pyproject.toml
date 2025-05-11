@@ -4,11 +4,7 @@ version = "2025.4.18.5"
 description = "Soda's Bioinformatics showcase"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = [
-    "django>=5.2",
-    "sodatools>=2025.2.16.0",
-    "uvicorn>=0.34.1",
-]
+dependencies = ["django>=5.2", "sodatools>=2025.2.16.0", "uvicorn>=0.34.1"]
 
 
 [project.urls]
@@ -43,6 +39,7 @@ packages = ["bio_showcase", "bio_showcase.*"]
 
 [project.scripts]
 bio_showcase = "bio_showcase.main:main"
+bio_pm = "bio_showcase.pm:run"
 
 [tool.ruff.format]
 quote-style = "single"
