@@ -10,3 +10,9 @@ def run():
         args = [sys.executable, 'manage.py']
         args.extend(sys.argv[1:])
         subprocess.run(args, check=True)
+
+
+def runserver():
+    with CD(cr.parent):
+        args = [sys.executable, 'manage.py', 'runserver']
+        subprocess.run(args, check=True)
