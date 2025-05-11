@@ -7,7 +7,7 @@ def main():
     cr = Path(__file__).resolve().parent
     with CD(cr):
         try:
-            uvicorn.run("bio_showcase.bio_showcase.asgi:application", port=8000, log_level="info")
+            uvicorn.run("bio_showcase.asgi:application", port=8000, log_level="info")
         except KeyboardInterrupt:
             pass
 
