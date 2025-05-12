@@ -3,8 +3,13 @@ name = "bio-showcase"
 version = "2025.5.12.0"
 description = "Soda's Bioinformatics showcase"
 readme = "README.md"
-requires-python = ">=3.10"
-dependencies = ["django>=5.2", "sodatools>=2025.2.16.0", "uvicorn>=0.34.1"]
+requires-python = ">=3.11"
+dependencies = [
+    "django>=5.2",
+    "sodatools>=2025.2.16.0",
+    "trayicons>=2025.5.12.1",
+    "uvicorn>=0.34.1",
+]
 
 
 [project.urls]
