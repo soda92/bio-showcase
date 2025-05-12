@@ -1,13 +1,14 @@
 from django.http import HttpResponse
+import django.template.loader
 from .models import Question
 
 
 def index(request):
-    output = "<a href='https://docs.djangoproject.com/en/5.2/intro/tutorial02/'>https://docs.djangoproject.com/en/5.2/intro/tutorial02/</a><br>Hello, world. You're at the polls index."
-
     latest_question_list = Question.objects.order_by('-pub_date')[:5]
-    output += ', '.join([q.question_text for q in latest_question_list])
-    return HttpResponse(output)
+    template = django.template.loader.get_template('bio_polls/index.html')
+    context = {'latest_question_list': latest_question_list}
+
+    return HttpResponse(template.render(context=context, request=request))
 
 
 def detail(request, question_id):
