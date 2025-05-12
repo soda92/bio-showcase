@@ -1,18 +1,29 @@
 from django.http import HttpResponse
-import django.template.loader
 from .models import Question
+import django.shortcuts
+import django.http
 
 
 def index(request):
     latest_question_list = Question.objects.order_by('-pub_date')[:5]
-    template = django.template.loader.get_template('bio_polls/index.html')
     context = {'latest_question_list': latest_question_list}
 
-    return HttpResponse(template.render(context=context, request=request))
+    return django.shortcuts.render(
+        request=request, template_name='polls/index.html', context=context
+    )
 
 
 def detail(request, question_id):
-    return HttpResponse("You're looking at question %s." % question_id)
+    try:
+        question = Question.objects.get(pk=question_id)
+    except Question.DoesNotExist:
+        raise django.http.Http404('Question does not exist')
+    else:
+        return django.shortcuts.render(
+            request=request,
+            template_name='polls/detail.html',
+            context={'question': question},
+        )
 
 
 def results(request, question_id):
