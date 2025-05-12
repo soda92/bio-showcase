@@ -45,9 +45,15 @@ packages = ["bio_showcase", "bio_polls"]
 [project.scripts]
 bio_run = "bio_showcase.main:main"
 bio_pm = "bio_showcase.pm:run"
+pm = "bio_showcase.pm:run"
 bio_dev = "bio_showcase.pm:runserver"
 
 [tool.ruff.format]
 quote-style = "single"
 indent-style = "space"
 docstring-code-format = true
+
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1",
+]
