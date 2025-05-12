@@ -29,12 +29,13 @@ SECRET_KEY = os.getenv(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False if os.getenv('DJANGO_PRODUCTION') else True
 
-ALLOWED_HOSTS = [".sodacris.com", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ['.sodacris.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'bio_polls.apps.PollsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
