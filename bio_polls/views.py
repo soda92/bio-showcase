@@ -14,16 +14,12 @@ def index(request):
 
 
 def detail(request, question_id):
-    try:
-        question = Question.objects.get(pk=question_id)
-    except Question.DoesNotExist:
-        raise django.http.Http404('Question does not exist')
-    else:
-        return django.shortcuts.render(
-            request=request,
-            template_name='polls/detail.html',
-            context={'question': question},
-        )
+    question = django.shortcuts.get_object_or_404(Question, pk=question_id)
+    return django.shortcuts.render(
+        request=request,
+        template_name='polls/detail.html',
+        context={'question': question},
+    )
 
 
 def results(request, question_id):
