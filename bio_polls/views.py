@@ -1,36 +1,29 @@
-from django.http import HttpResponse, HttpResponseRedirect
 import django.urls
+import django.views
+import django.views.generic
 from .models import Question, Choice
 import django.shortcuts
 import django.http
 import django.db.models
 
 
-def index(request):
-    latest_question_list = Question.objects.order_by('-pub_date')[:5]
-    context = {'latest_question_list': latest_question_list}
+class IndexView(django.views.generic.ListView):
+    template_name = 'polls/index.html'
+    context_object_name = 'latest_question_list'
 
-    return django.shortcuts.render(
-        request=request, template_name='polls/index.html', context=context
-    )
-
-
-def detail(request, question_id):
-    question = django.shortcuts.get_object_or_404(Question, pk=question_id)
-    return django.shortcuts.render(
-        request=request,
-        template_name='polls/detail.html',
-        context={'question': question},
-    )
+    def get_queryset(self):
+        """Return the last five published questions."""
+        return Question.objects.order_by('-pub_date')[:5]
 
 
-def results(request, question_id):
-    question = django.shortcuts.get_object_or_404(Question, pk=question_id)
-    return django.shortcuts.render(
-        request=request,
-        template_name='polls/results.html',
-        context={'question': question},
-    )
+class DetailView(django.views.generic.DetailView):
+    model = Question
+    template_name = 'polls/detail.html'
+
+
+class ResultsView(django.views.generic.DetailView):
+    model = Question
+    template_name = 'polls/results.html'
 
 
 def vote(request, question_id):
@@ -52,6 +45,6 @@ def vote(request, question_id):
         selected_choice.save()
         # Always return an HttpResponseRedirect after sucessfully dealing with POST data.
         # This prevents data from being posted twice if a use hits the Back button.
-        return HttpResponseRedirect(
+        return django.http.HttpResponseRedirect(
             django.urls.reverse('polls:results', args=(question_id,))
         )
