@@ -1,0 +1,9 @@
+{
+    // https://fizzylogic.nl/2024/09/28/running-django-tests-in-vscode
+    "python.testing.unittestArgs": [
+        "-p",
+        "*test*.py"
+    ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestEnabled": true
+}
