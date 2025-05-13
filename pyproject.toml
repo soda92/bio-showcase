@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "django>=5.2",
-    "soda-nginx>=2025.5.13.1; platform_system=='Windows'",
+    "soda-nginx>=2025.5.13.4 ; sys_platform == 'win32'",
     "sodatools>=2025.2.16.0",
     "trayicons>=2025.5.12.1",
     "uvicorn>=0.34.1",

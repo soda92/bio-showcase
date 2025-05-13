@@ -149,7 +149,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "django", specifier = ">=5.2" },
-    { name = "soda-nginx", marker = "sys_platform == 'win32'", specifier = ">=2025.5.13.1" },
+    { name = "soda-nginx", marker = "sys_platform == 'win32'", specifier = ">=2025.5.13.4" },
     { name = "sodatools", specifier = ">=2025.2.16.0" },
     { name = "trayicons", specifier = ">=2025.5.12.1" },
     { name = "uvicorn", specifier = ">=0.34.1" },
@@ -1393,14 +1393,14 @@ wheels = [
 
 [[package]]
 name = "soda-nginx"
-version = "2025.5.13.1"
+version = "2025.5.13.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "sodatools" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1d/3f/d7de0e8cfa6a84d0ec8ca871799ec73b83af13704a9ee2cd9ebb2319bf15/soda_nginx-2025.5.13.1.tar.gz", hash = "sha256:1966420ba36147e62d0e0eca29e443e5694a21799408b38db61806fbf4be9bb0", size = 4202054, upload_time = "2025-05-13T14:26:19.589Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/32/92/4d9c1db0a51c5da95aa622e9820aea872a90636f41dab200e97b9b22e036/soda_nginx-2025.5.13.4.tar.gz", hash = "sha256:3d7e84631b69f8e5a152dd789b21f81368affa18626b81e905d0d733ffba9de4", size = 4202258, upload_time = "2025-05-13T14:43:13.157Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/65/bc/5b4e4fc02a45aef9e6271130e2c5a63f1257508397a35dc3759e4f54e82b/soda_nginx-2025.5.13.1-py3-none-win_amd64.whl", hash = "sha256:a730314982b9f9a4bd3984447a8a65704b89e9e1d47b13573b3c8a95c4759e9f", size = 4218667, upload_time = "2025-05-13T14:26:17.446Z" },
+    { url = "https://files.pythonhosted.org/packages/17/57/b83675047163f446d64b5b5613e7358d320853e60db4cc3a1e6cf97a05d9/soda_nginx-2025.5.13.4-py3-none-win_amd64.whl", hash = "sha256:01943ff45b57761ad34e73699f23611f9fe4f2b14e3baf3ebbb93243b58c0613", size = 4218748, upload_time = "2025-05-13T14:43:10.939Z" },
 ]
 
 [[package]]
