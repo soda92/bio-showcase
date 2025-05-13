@@ -1,5 +1,7 @@
 mergedimage.png
 *.kra~
+/bio_static
+/bio_media
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

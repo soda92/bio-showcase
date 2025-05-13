@@ -17,9 +17,18 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+import django.conf.urls.static
+import django.conf  # noqa: F401
 
 urlpatterns = [
     path('polls/', include('bio_polls.urls')),
     path('admin/', admin.site.urls),
     path('', include('bio_polls.urls')),
 ]
+
+# + django.conf.urls.static.static(
+#     django.conf.settings.STATIC_URL, document_root=django.conf.settings.STATIC_ROOT
+# )
+# + django.conf.urls.static.static(
+#     django.conf.settings.MEDIA_URL, document_root=django.conf.settings.MEDIA_ROOT
+# )

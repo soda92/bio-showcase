@@ -21,7 +21,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.sdist]
 ignore-vcs = true
-packages = ["bio_showcase", "bio_polls"]
+packages = ["bio_showcase", "bio_polls", "bio_static", "bio_media"]
 include = ["*.sqlite3"]
 exclude = [
     "__pycache__",
@@ -37,7 +37,7 @@ exclude = [
 
 [tool.hatch.build.targets.wheel]
 ignore-vcs = true
-packages = ["bio_showcase", "bio_polls"]
+packages = ["bio_showcase", "bio_polls", "bio_static", "bio_media"]
 # exclude is not needed because wheel is build from sdist in uv
 
 # [tool.hatch.build.hooks.custom]
@@ -54,6 +54,4 @@ indent-style = "space"
 docstring-code-format = true
 
 [dependency-groups]
-dev = [
-    "jupyter>=1.1.1",
-]
+dev = ["jupyter>=1.1.1"]

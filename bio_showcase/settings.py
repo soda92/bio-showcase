@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
-from pathlib import Path
+from sodatools import Path, str_path
+import platform
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -119,7 +120,23 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+python_ver = '.'.join(platform.python_version().split('.')[:2])
+STATIC_ROOT = str_path(
+    Path.home().joinpath(
+        f'bio_showcase/venv/lib/python{python_ver}/site-packages/bio_static'
+    )
+)
+MEDIA_ROOT = str_path(
+    Path.home().joinpath(
+        f'bio_showcase/venv/lib/python{python_ver}/site-packages/bio_media'
+    )
+)
+if platform.system() == 'Windows':
+    CWD = Path(__file__).resolve().parent
+    STATIC_ROOT = str_path(CWD.parent.joinpath('bio_static/'))
+    MEDIA_ROOT = str_path(CWD.parent.joinpath('bio_media/'))
 STATIC_URL = 'static/'
+MEDIA_URL = 'media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
