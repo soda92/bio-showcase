@@ -19,7 +19,7 @@ jobs:
         script: |
           cd ~/bio_showcase                     # Navigate to your project directory
           git pull origin main                  # Pull the latest changes
-          source venv/bin/activate.fish         # Activate your virtual environment (adjust path if needed)
-          pip install . -U                      # Install/update dependencies again (in case of server changes)
+          source .venv/bin/activate.fish         # Activate your virtual environment (adjust path if needed)
+          uv sync                      # Install/update dependencies again (in case of server changes)
           python manage.py migrate --noinput    # Run database migrations
           sudo systemctl restart bio
