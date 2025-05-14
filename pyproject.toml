@@ -1,6 +1,6 @@
 [project]
 name = "bio-showcase"
-version = "2025.5.12.0"
+version = "2025.5.14.1"
 description = "Soda's Bioinformatics showcase"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -9,7 +9,6 @@ dependencies = [
     "django-debug-toolbar>=5.2.0",
     "soda-nginx>=2025.5.13.5 ; sys_platform == 'win32'",
     "sodatools>=2025.2.16.0",
-    "trayicons>=2025.5.12.1",
     "uvicorn>=0.34.1",
 ]
 
@@ -56,4 +55,4 @@ indent-style = "space"
 docstring-code-format = true
 
 [dependency-groups]
-dev = ["jupyter>=1.1.1"]
+dev = ["jupyter>=1.1.1", "trayicons>=2025.5.12.1"]
