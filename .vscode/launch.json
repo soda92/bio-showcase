@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Update_version",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/update_version.py",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Python Debugger: Django",
             "type": "debugpy",
             "request": "launch",
