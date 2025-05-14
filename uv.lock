@@ -131,20 +131,20 @@ wheels = [
 
 [[package]]
 name = "bio-showcase"
-version = "2025.5.12.0"
+version = "2025.5.14.2"
 source = { editable = "." }
 dependencies = [
     { name = "django" },
     { name = "django-debug-toolbar" },
     { name = "soda-nginx", marker = "sys_platform == 'win32'" },
     { name = "sodatools" },
-    { name = "trayicons" },
     { name = "uvicorn" },
 ]
 
 [package.dev-dependencies]
 dev = [
     { name = "jupyter" },
+    { name = "trayicons" },
 ]
 
 [package.metadata]
@@ -153,12 +153,14 @@ requires-dist = [
     { name = "django-debug-toolbar", specifier = ">=5.2.0" },
     { name = "soda-nginx", marker = "sys_platform == 'win32'", specifier = ">=2025.5.13.5" },
     { name = "sodatools", specifier = ">=2025.2.16.0" },
-    { name = "trayicons", specifier = ">=2025.5.12.1" },
     { name = "uvicorn", specifier = ">=0.34.1" },
 ]
 
 [package.metadata.requires-dev]
-dev = [{ name = "jupyter", specifier = ">=1.1.1" }]
+dev = [
+    { name = "jupyter", specifier = ">=1.1.1" },
+    { name = "trayicons", specifier = ">=2025.5.12.1" },
+]
 
 [[package]]
 name = "bleach"
