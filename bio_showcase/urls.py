@@ -19,9 +19,10 @@ from django.urls import path, include
 import django.conf.urls.static
 import django.conf  # noqa: F401
 from bio_polls.admin import admin_site
+from debug_toolbar.toolbar import debug_toolbar_urls
 
 urlpatterns = [
     path('polls/', include('bio_polls.urls')),
     path('admin/', admin_site.urls),
     path('', include('bio_polls.urls')),
-]
+] + debug_toolbar_urls()
