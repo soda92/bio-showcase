@@ -1,6 +1,6 @@
 [project]
 name = "bio-showcase"
-version = "2025.5.14.4"
+version = "2025.5.14.5"
 description = "Soda's Bioinformatics showcase"
 readme = "README.md"
 requires-python = ">=3.11"
