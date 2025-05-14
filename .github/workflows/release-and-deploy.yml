@@ -1,0 +1,25 @@
+name: Auto update on server
+
+on:
+  push:
+    tags:
+      - '*' # Trigger on tags like v1.0, v1.0.0, v2.0-beta, etc.
+
+jobs:
+  release_and_pypi:
+    runs-on: ubuntu-latest # Run this job on a Linux runner
+    steps:
+    - name: Deploy on server
+      uses: appleboy/ssh-action@v1.2.2
+      with:
+        host: ${{ secrets.SERVER_IP }}      # Your server's IP address or hostname
+        username: ${{ secrets.SERVER_USERNAME }} # Your SSH username
+        key: ${{ secrets.SERVER_SSH_KEY }}     # Your private SSH key (securely stored as a secret)
+        port: ${{ secrets.SERVER_PORT }}      # SSH port (default is 22)
+        script: |
+          cd ~/bio-showcase                     # Navigate to your project directory
+          git pull origin main                  # Pull the latest changes
+          source venv/bin/activate              # Activate your virtual environment (adjust path if needed)
+          pip install . -U                      # Install/update dependencies again (in case of server changes)
+          python manage.py migrate --noinput    # Run database migrations
+          sudo systemctl restart bio
