@@ -22,7 +22,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.sdist]
 ignore-vcs = true
-packages = ["bio_showcase", "bio_polls", "bio_static", "bio_media"]
+packages = ["bio_showcase", "bio_media", "bio_polls", "bio_primer"]
 exclude = [
     "__pycache__",
     "*.pyc",
@@ -38,7 +38,7 @@ exclude = [
 
 [tool.hatch.build.targets.wheel]
 ignore-vcs = true
-packages = ["bio_showcase", "bio_polls", "bio_static", "bio_media"]
+packages = ["bio_showcase", "bio_media", "bio_polls", "bio_primer"]
 # exclude is not needed because wheel is build from sdist in uv
 
 # [tool.hatch.build.hooks.custom]

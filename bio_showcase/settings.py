@@ -38,6 +38,7 @@ ALLOWED_HOSTS = ['.sodacris.com', 'localhost', '127.0.0.1']
 INSTALLED_APPS = [
     'bio_polls.apps.PollsConfig',
     'bio_polls.apps.MyAdminConfig',
+    'bio_primer.apps.BioPrimerConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
