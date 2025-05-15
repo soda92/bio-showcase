@@ -1,24 +1,29 @@
 hello at primer3-py page
 
-<form action="{% url 'primer:design' %}" method="post">
-    {% csrf_token %}
+<form action="{% url 'primer:design' %}" method="get">
     <fieldset>
         <legend>
             <h1>Primer design</h1>
         </legend>
         {% if error_message %}<p><strong>{{error_message}}</strong></p>
         {% endif %}
-        <input type="text" id="sequence">
-        <label for="sequence">DNA Sequence</label>
-
-        <label for="seq_start">Sequence start</label>
-        <input type="number" id="seq_start">
         {% if result %}
-        {{result.seq_start}}
-        {% endif %}
-        </input>
+        <input type="text" name="sequence">
+        <label for="sequence">DNA Sequence</label>
+        
+        <label for="seq_start">Sequence start</label>
+        <input type="number" name="seq_start" value="{{result.seq_start}}">
         <label for="sequence">Sequence end</label>
-        <input type="number" id="seq_end">
+        <input type="number" name="seq_end">
+        {% else %}
+        <input type="text" name="sequence">
+        <label for="sequence">DNA Sequence</label>
+        
+        <label for="seq_start">Sequence start</label>
+        <input type="number" name="seq_start">
+        <label for="sequence">Sequence end</label>
+        <input type="number" name="seq_end">
+        {% endif %}
     </fieldset>
     <input type="submit" value="Design">
 </form>

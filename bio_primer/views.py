@@ -17,7 +17,7 @@ class IndexView(django.views.generic.ListView):
 
 def design(request):
     try:
-        seq_start = request.POST['seq_start']
+        seq_start = request.GET['seq_start']
     except KeyError:
         # Redisplay the question voting form.
         return django.shortcuts.render(
@@ -28,7 +28,7 @@ def design(request):
             },
         )
     else:
-        result = PCRResult(seq_start=seq_start)
+        result = PCRResult(seq_start=seq_start, result='some result')
         return django.shortcuts.render(
             request=request,
             template_name='primer/index.html',
