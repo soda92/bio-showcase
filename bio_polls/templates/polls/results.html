@@ -1,8 +1,5 @@
 {% load static %}
-
-<link rel="icon" href="{% static 'favicon.ico' %}">
-
-<a href="/">Home</a>
+{% include 'polls/header.html' %}
 <h1>{{question.question_text}}</h1>
 
 <ul>

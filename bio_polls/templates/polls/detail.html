@@ -1,7 +1,5 @@
 {% load static %}
-
-<link rel="icon" href="{% static 'favicon.ico' %}">
-<a href="/">Home</a>
+{% include 'polls/header.html' %}
 <form action="{% url 'polls:vote' question.id %}" method="post">
     {% csrf_token %}
     <fieldset>
