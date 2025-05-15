@@ -7,6 +7,7 @@ requires-python = ">=3.11"
 dependencies = [
     "django>=5.2",
     "django-debug-toolbar>=5.2.0",
+    "primer3-py>=2.1.0",
     "soda-nginx>=2025.5.13.5 ; sys_platform == 'win32'",
     "sodatools>=2025.2.16.0",
     "uvicorn>=0.34.1",
@@ -45,9 +46,6 @@ packages = ["bio_showcase", "bio_media", "bio_polls", "bio_primer"]
 
 [project.scripts]
 bio_run = "bio_showcase.main:main"
-bio_pm = "bio_showcase.pm:run"
-pm = "bio_showcase.pm:run"
-bio_dev = "bio_showcase.pm:runserver"
 
 [tool.ruff.format]
 quote-style = "single"
