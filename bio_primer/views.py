@@ -1,8 +1,7 @@
 import django.views.generic
 import django.utils.timezone
-from primer3 import bindings
 from .models import PCRResult
-
+from .primer import get_primer_result
 # Create your views here.
 
 
@@ -18,17 +17,28 @@ class IndexView(django.views.generic.ListView):
 def design(request):
     try:
         seq_start = request.GET['seq_start']
+        seq_end = request.GET['seq_end']
+        sequence = request.GET['sequence']
     except KeyError:
         # Redisplay the question voting form.
         return django.shortcuts.render(
             request=request,
             template_name='primer/index.html',
             context={
-                'error_message': "You didn't select a choice.",
+                'error_message': 'parameter error',
             },
         )
     else:
-        result = PCRResult(seq_start=seq_start, result='some result')
+        sequence = sequence.replace("'", '').replace(' ', '')
+
+        primer_result = get_primer_result(sequence, int(seq_start), int(seq_end))
+
+        result = PCRResult(
+            seq_start=seq_start,
+            result=primer_result,
+            seq_end=seq_end,
+            sequence=sequence,
+        )
         return django.shortcuts.render(
             request=request,
             template_name='primer/index.html',

@@ -7,18 +7,19 @@ hello at primer3-py page
         </legend>
         {% if error_message %}<p><strong>{{error_message}}</strong></p>
         {% endif %}
+
         {% if result %}
-        <input type="text" name="sequence">
+        <input type="text" name="sequence" value="{{result.sequence}}">
         <label for="sequence">DNA Sequence</label>
-        
+
         <label for="seq_start">Sequence start</label>
         <input type="number" name="seq_start" value="{{result.seq_start}}">
         <label for="sequence">Sequence end</label>
-        <input type="number" name="seq_end">
+        <input type="number" name="seq_end" value="{{result.seq_end}}">
         {% else %}
         <input type="text" name="sequence">
         <label for="sequence">DNA Sequence</label>
-        
+
         <label for="seq_start">Sequence start</label>
         <input type="number" name="seq_start">
         <label for="sequence">Sequence end</label>
