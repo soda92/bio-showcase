@@ -52,5 +52,8 @@ quote-style = "single"
 indent-style = "space"
 docstring-code-format = true
 
+[tool.ruff.lint]
+ignore = ['F401']
+
 [dependency-groups]
 dev = ["jupyter>=1.1.1", "trayicons>=2025.5.12.1; sys_platform == 'win32'"]
