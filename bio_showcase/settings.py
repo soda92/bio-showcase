@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from sodatools import Path, str_path
-import platform  # noqa: F401
+from platform import sys as sys_platform
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -127,7 +127,10 @@ CWD = Path(__file__).resolve().parent
 STATIC_ROOT = str_path(CWD.parent.joinpath('bio_static/'))
 MEDIA_ROOT = str_path(CWD.parent.joinpath('bio_media/'))
 
-STATIC_URL = 'https://bio-staticfiles.web.app/'
+if sys_platform.platform == "win32":
+    STATIC_URL = 'static/'
+else:
+    STATIC_URL = 'https://bio-staticfiles.web.app/'
 MEDIA_URL = 'media/'
 
 # Default primary key field type

@@ -1,6 +1,7 @@
 {% load static %}
-hello at primer3-py page
 
+
+hello at primer3-py page
 <form action="{% url 'primer:design' %}" method="get">
     <fieldset>
         <legend>
@@ -25,12 +26,15 @@ hello at primer3-py page
         <input type="number" name="seq_start" required>
         <label for="sequence">Sequence end</label>
         <input type="number" name="seq_end" required>
-        <button id="fill_demo">Fill demo sequence</button>
         {% endif %}
     </fieldset>
     <input type="submit" value="Design">
-    <button id="clear">Clear</button>
 </form>
+{% if result %}
+<button id="clear">Clear</button>
+{% else %}
+<button id="fill_demo">Fill demo sequence</button>
+{% endif %}
 
 {% if result %}
 <h2>Left primers</h2>
@@ -81,4 +85,6 @@ hello at primer3-py page
     {% endfor %}
 </table>
 {% endif %}
-<script src="{% static 'primer/index.js' %}" />
+
+
+<script src="{% static 'primer/index.js' %}"></script>
