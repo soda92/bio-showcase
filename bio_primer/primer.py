@@ -1,7 +1,7 @@
 from primer3 import bindings
 
 
-def get_primer_result(sequence, seq_start, seq_end):
+def get_primer_result(sequence, seq_start, seq_end) -> str:
     r = bindings.design_primers(
         seq_args={
             'SEQUENCE_ID': 'MH1000',

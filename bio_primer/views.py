@@ -1,6 +1,7 @@
+import json
 import django.views.generic
 import django.utils.timezone
-from .models import PCRResult
+from .models import PCRResult, ResultObject
 from .primer import get_primer_result
 # Create your views here.
 
@@ -42,5 +43,5 @@ def design(request):
         return django.shortcuts.render(
             request=request,
             template_name='primer/index.html',
-            context={'result': result},
+            context={'result': result, 'r': ResultObject(primer_result)},
         )
