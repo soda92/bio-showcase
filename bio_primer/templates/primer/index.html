@@ -2,7 +2,7 @@
 
 
 hello at primer3-py page
-<form action="{% url 'primer:design' %}" method="get">
+<form action="{% url 'primer:design' %}" method="get" id="form1">
     <fieldset>
         <legend>
             <h1>Primer design</h1>
@@ -20,7 +20,8 @@ hello at primer3-py page
         <input type="number" name="seq_end" value="{{result.seq_end}}">
         {% else %}
         <label for="sequence">DNA Sequence</label>
-        <input type="text" name="sequence" required>
+        <textarea name="sequence" id="" required cols="40" rows="10">
+        </textarea>
 
         <label for="seq_start">Sequence start</label>
         <input type="number" name="seq_start" required>
@@ -28,13 +29,13 @@ hello at primer3-py page
         <input type="number" name="seq_end" required>
         {% endif %}
     </fieldset>
-    <input type="submit" value="Design">
 </form>
 {% if result %}
 <button id="clear">Clear</button>
 {% else %}
 <button id="fill_demo">Fill demo sequence</button>
 {% endif %}
+<input type="submit" form="form1" value="Design">
 
 {% if result %}
 <h2>Left primers</h2>
