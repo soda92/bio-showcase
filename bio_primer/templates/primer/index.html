@@ -1,7 +1,9 @@
 {% load static %}
 
-
 hello at primer3-py page
+
+<link rel="stylesheet" href="{% static 'primer/style.css' %}">
+
 <form action="{% url 'primer:design' %}" method="get" id="form1">
     <fieldset>
         <legend>
@@ -39,7 +41,7 @@ hello at primer3-py page
 
 {% if result %}
 <h2>Left primers</h2>
-<table id="result_table" data-val="{{result.result}}">
+<table>
     <tr>
         <th></th>
         <th>Sequence</th>
@@ -55,7 +57,7 @@ hello at primer3-py page
 </table>
 
 <h2>Right primers</h2>
-<table id="result_table" data-val="{{result.result}}">
+<table>
     <tr>
         <th></th>
         <th>Sequence</th>
@@ -71,7 +73,7 @@ hello at primer3-py page
 </table>
 
 <h2>Internal primers</h2>
-<table id="result_table" data-val="{{result.result}}">
+<table>
     <tr>
         <th></th>
         <th>Sequence</th>
