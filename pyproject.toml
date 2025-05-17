@@ -1,6 +1,6 @@
 [project]
 name = "bio-showcase"
-version = "2025.5.16.0"
+version = "2025.5.17.0"
 description = "Soda's Bioinformatics showcase"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -9,6 +9,7 @@ dependencies = [
     "django-debug-toolbar>=5.2.0",
     "primer3-py>=2.1.0",
     "soda-nginx>=2025.5.13.5 ; sys_platform == 'win32'",
+    "soda-update-version>=2025.5.17.4",
     "sodatools>=2025.2.16.0",
     "uvicorn>=0.34.1",
 ]
