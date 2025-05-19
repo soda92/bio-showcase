@@ -6,7 +6,9 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "django>=5.2",
+    "django-cors-headers>=4.7.0",
     "django-debug-toolbar>=5.2.0",
+    "djangorestframework>=3.16.0",
     "primer3-py>=2.1.0",
     "soda-nginx>=2025.5.13.5 ; sys_platform == 'win32'",
     "soda-update-version>=2025.5.17.4",

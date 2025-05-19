@@ -9,6 +9,13 @@ import django.http
 import django.db.models
 
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework import generics  # For simpler common views
+from .serializers import QuestionSerializer, ChoiceSerializer
+
+
 class IndexView(django.views.generic.ListView):
     template_name = 'polls/index.html'
     context_object_name = 'latest_question_list'
@@ -56,3 +63,23 @@ def vote(request, question_id):
         return django.http.HttpResponseRedirect(
             django.urls.reverse('polls:results', args=(question_id,))
         )
+
+
+class QuestionListAPIView(generics.ListCreateAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+
+
+class QuestionDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+
+
+class ChoiceListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Choice.objects.all()
+    serializer_class = ChoiceSerializer
+
+
+class ChoiceDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Choice.objects.all()
+    serializer_class = ChoiceSerializer

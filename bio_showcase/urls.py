@@ -23,6 +23,7 @@ from debug_toolbar.toolbar import debug_toolbar_urls
 
 urlpatterns = [
     path('polls/', include('bio_polls.urls')),
+    path('api/polls/', include('bio_polls.api_urls')),
     path('primer/', include('bio_primer.urls')),
     path('admin/', admin_site.urls),
     path('', include('bio_polls.urls')),

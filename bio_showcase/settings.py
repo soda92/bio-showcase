@@ -45,17 +45,25 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
+    'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
 ]
 
 ROOT_URLCONF = 'bio_showcase.urls'
@@ -127,7 +135,7 @@ CWD = Path(__file__).resolve().parent
 STATIC_ROOT = str_path(CWD.parent.joinpath('bio_static/'))
 MEDIA_ROOT = str_path(CWD.parent.joinpath('bio_media/'))
 
-if sys_platform.platform == "win32":
+if sys_platform.platform == 'win32':
     STATIC_URL = 'static/'
 else:
     STATIC_URL = 'https://bio-staticfiles.web.app/'
