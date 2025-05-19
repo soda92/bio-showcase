@@ -131,7 +131,7 @@ wheels = [
 
 [[package]]
 name = "bio-showcase"
-version = "2025.5.16.0"
+version = "2025.5.17.0"
 source = { editable = "." }
 dependencies = [
     { name = "django" },
