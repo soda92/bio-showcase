@@ -1,7 +1,7 @@
 from primer3 import bindings
 
 
-def get_primer_result(sequence, seq_start, seq_end) -> str:
+def get_primer_result(sequence, seq_start, seq_end) -> dict:
     r = bindings.design_primers(
         seq_args={
             'SEQUENCE_ID': 'MH1000',
@@ -38,8 +38,4 @@ def get_primer_result(sequence, seq_start, seq_end) -> str:
             ],
         },
     )
-
-    import json
-
-    result = json.dumps(r, indent=2)
-    return result
+    return r
