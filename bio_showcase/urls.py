@@ -16,15 +16,12 @@ Including another URLconf
 """
 
 from django.urls import path, include
-import django.conf.urls.static
-import django.conf  # noqa: F401
-from bio_polls.admin import admin_site
+from django.contrib import admin
+from django.views.generic import RedirectView
 from debug_toolbar.toolbar import debug_toolbar_urls
 
 urlpatterns = [
-    path('polls/', include('bio_polls.urls')),
-    path('api/polls/', include('bio_polls.api_urls')),
     path('primer/', include('bio_primer.urls')),
-    path('admin/', admin_site.urls),
-    path('', include('bio_polls.urls')),
+    path('admin/', admin.site.urls),
+    path('', RedirectView.as_view(url='/primer/', permanent=False)),
 ] + debug_toolbar_urls()

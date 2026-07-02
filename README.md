@@ -1,6 +1,6 @@
 # Bio-Showcase (生物信息学工具展示平台)
 
-这是一个集成了生物信息学实用工具与投票功能的 Web 平台。项目采用前后端分离的 Monorepo（单体仓库）架构：
+这是一个集成了生物信息学实用工具的 Web 平台。项目采用前后端分离的 Monorepo（单体仓库）架构：
 *   **后端**：基于 Python Django 和 Django REST Framework，提供引物设计算法和数据服务接口。
 *   **前端**：基于现代高性能 TypeScript 框架 **Deno Fresh**，实现无客户端 JS 负载的高效动态交互界面。
 
@@ -12,9 +12,6 @@
     *   后端集成 `primer3-py` 科学计算库。
     *   支持用户输入 DNA 序列、设定起始位置与终止位置。
     *   在前端直观展示筛选优化后的左引物 (Left Primers)、右引物 (Right Primers) 以及内插物 (Internal Primers) 序列及其 GC 含量。
-2.  **投票系统 (Django Polls)**
-    *   经典的问答投票服务，提供直观的投票与统计功能。
-    *   提供完整的 REST APIs，支持获取问题列表、新增选项及投票操作。
 
 ---
 
@@ -24,9 +21,8 @@
 bio-showcase/
 ├── bio_showcase/           # Django 项目全局配置 (settings.py, urls.py 等)
 ├── bio_primer/             # PCR 引物设计后端 App 模块 (包含 primer3-py 计算逻辑)
-├── bio_polls/              # 投票系统后端 App 模块 (含 Django REST Framework 接口)
 ├── frontend/               # Deno Fresh 前端工程目录
-│   ├── routes/             # 前端路由页面 (首页、引物设计页、投票页)
+│   ├── routes/             # 前端路由页面 (首页、引物设计页)
 │   ├── islands/            # Preact 客户端交互岛组件 (如 PrimerDesign.tsx)
 │   ├── components/         # 页面公共静态组件 (Header, Button, Card 等)
 │   └── counter_test.tsx    # 前端单元测试
@@ -87,7 +83,7 @@ deno test
 
 ## 持续集成与部署 (CI/CD)
 
-项目在 `.github/workflows/` 中配置了三个自动化部署流程：
+项目在 `.github/workflows/` 中配置了自动化部署流程：
 1.  **Deno Deploy (前端部署)**:
     *   配置文件：`.github/workflows/deploy-frontend.yml`
     *   触发时机：当代码推送到 `main` 分支或提交 PR 时。

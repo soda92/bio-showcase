@@ -22,11 +22,6 @@ export default function Home() {
       {/* Main content area for cards */}
       <main class="flex-grow container mx-auto px-4 py-8"> {/* Responsive padding, centers cards */}
         <div class="flex flex-wrap justify-center gap-6 md:gap-8"> {/* Centers and spaces cards */}
-          {/* <Card
-            link="/polls"
-            description="Django Polls"
-            backgroundImage="/dna-1.png" // Replace with your actual path
-          /> */}
           <Card
             link="/primer"
             description="PCR Primer Design"
