@@ -1,85 +1,85 @@
-# 生物信息学与 Web 开发结合：进阶学习计划
+# Bioinformatics & Web Development: Advanced Learning Plan
 
-这是一个为你量身定制的生物信息学编程学习计划。你将基于本项目现有的 **Django 后端 + Deno Fresh 前端** 架构，从引物设计出发，逐步扩展到序列操作、经典算法、引物物理化学特征评估以及 NCBI 公共数据库对接，将理论算法转化为直观易用的 Web 应用程序。
-
----
-
-## 阶段一：打牢基础 — 序列操作与物化性质分析
-
-利用当前项目结构，在后端添加基础的 DNA/RNA 序列处理逻辑，并在前端设计交互页面展示。
-
-### 1. 学习目标
-*   掌握 DNA 序列的表示方式与基本性质（反向互补、转录、翻译）。
-*   理解 **GC 含量（GC Content）** 在引物设计、基因组区域识别（如 CpG 岛）中的生物学意义。
-
-### 2. 实践课题
-*   **任务 1：反向互补与转录/翻译计算器**
-    *   **后端**：在 Django 中实现一个 API，接收 DNA 序列，输出其反向互补序列（Reverse Complement）、转录后的 RNA 序列，以及翻译后的蛋白质氨基酸序列（熟练运用密码子表 Codon Table）。
-    *   **前端**：在 Fresh 路由中增加一个新的页面，输入 DNA，实时展示这些转换结果。
-*   **任务 2：滑动窗口 GC 含量图谱**
-    *   **后端**：计算 DNA 序列的全局 GC 含量。进阶使用滑动窗口算法（Sliding Window），输出沿序列每个位置的局部 GC 含量数组。
-    *   **前端**：引入简单的图表库（如 Chart.js 或 Deno 兼容的 SVG 绘图），动态绘制出 GC 含量曲线图。
+This is a bioinformatics programming learning plan tailored for you. You will leverage the existing **Django backend + Deno Fresh frontend** architecture of this project to transition from basic primer design to sequence manipulation, classic alignment algorithms, thermodynamic characterization, and NCBI public database integration.
 
 ---
 
-## 阶段二：深入算法 — 序列比对 (Sequence Alignment)
+## Stage 1: Foundations — Sequence Manipulation & Physical Properties
 
-序列比对是生物信息学的基石，用于寻找不同基因或蛋白质之间的相似性与进化关系。
+Extend your current project structure by adding basic DNA/RNA sequence manipulation logic in the backend, and designing interactive UI pages in the frontend to showcase them.
 
-### 1. 学习目标
-*   掌握**动态规划（Dynamic Programming）**在序列比对中的应用。
-*   理解全局比对（Global Alignment）与局部比对（Local Alignment）的区别。
-*   掌握替换矩阵（如 BLOSUM62、PAM250）与空位罚分（Gap Penalties）的概念。
+### 1. Learning Objectives
+*   Understand how DNA sequences are represented and their core properties (Reverse Complement, Transcription, Translation).
+*   Understand the biological significance of **GC Content** in primer design and genomic region analysis (e.g., CpG islands).
 
-### 2. 实践课题
-*   **任务 3：手动实现 Needleman-Wunsch (全局比对) 算法**
-    *   **后端**：不使用外部三方库，用 Python 手写 Needleman-Wunsch 算法。输入两条序列，计算得分矩阵（Score Matrix）并进行回溯（Traceback），输出最佳比对结果。
-    *   **前端**：将比对矩阵以网格表形式在前端可视化渲染，用高亮颜色展示回溯路径以及比对匹配情况（用 `|` 标出匹配，用 `-` 标出空位）。
-*   **任务 4：手动实现 Smith-Waterman (局部比对) 算法**
-    *   在全局比对的基础上，修改得分边界与回溯终止条件，实现局部比对。
-
----
-
-## 阶段三：探索引物设计与引物特异性 (Primer Specificity)
-
-深入理解你目前代码里正在使用的 `primer3` 背后更复杂的生物学与热力学约束。
-
-### 1. 学习目标
-*   理解引物二聚体（Primer Dimers：发夹结构 Hairpins、自互补 Self-dimerization、端互补 Cross-dimerization）的物理化学原理。
-*   理解热力学参数（如退火温度 $T_m$ 值的波瓦（Wallace）公式与最近邻热力学模型）。
-*   明白为什么要进行**特异性检查**（避免引物错配到非目标基因区）。
-
-### 2. 实践课题
-*   **任务 5：引物热力学与发夹结构自主检测**
-    *   **后端**：编写算法检测引物序列的自互补区域，计算吉布斯自由能（$\Delta G$），预估引物是否容易形成发夹结构。
-*   **任务 6：引物特异性 BLAST 检索**
-    *   使用 Python 的 `Biopython` 库连接 NCBI 远程服务器，或者在本地下载并运行 `blastn`。将设计的引物在人类/小鼠基因组中进行 BLAST 比对，检查是否有潜在的非特异性扩增条带，并在前端输出警告。
+### 2. Practical Tasks
+*   **Task 1: Reverse Complement & Transcription/Translation Calculator**
+    *   **Backend**: Implement a Django API that receives a DNA sequence and returns its reverse complement, transcribed RNA sequence, and translated protein amino acid sequence (by implementing a codon table map).
+    *   **Frontend**: Add a new page in Fresh routes to accept DNA input and display these conversion results in real-time.
+*   **Task 2: Sliding-Window GC Content Profile**
+    *   **Backend**: Calculate the global GC percentage of a DNA sequence. As an optional advanced step, implement a sliding-window algorithm to return an array of local GC percentages along the sequence.
+    *   **Frontend**: Use a simple charting library (or Deno-compatible SVG rendering) to dynamically plot the GC content curve.
 
 ---
 
-## 阶段四：数据对接 — 生物数据库与 Entrez APIs
+## Stage 2: Algorithms — Sequence Alignment
 
-真实的生物信息学工作离不开庞大的公共数据库。
+Sequence alignment is the cornerstone of bioinformatics, used to find similarities and evolutionary relationships between genes or proteins.
 
-### 1. 学习目标
-*   学习 NCBI（美国生物技术信息中心）、Ensembl 等主流数据库的基本数据格式（FASTA, GenBank）。
-*   掌握使用 NCBI Entrez 接口获取基因、蛋白质、文献等原始数据的方法。
+### 1. Learning Objectives
+*   Master the application of **Dynamic Programming** in sequence alignment.
+*   Understand the difference between Global Alignment (Needleman-Wunsch) and Local Alignment (Smith-Waterman).
+*   Understand substitution matrices (e.g., BLOSUM62, PAM250) and gap penalties.
 
-### 2. 实践课题
-*   **任务 7：基因检索与自动引物设计工具**
-    *   **后端**：利用 `Biopython` 中的 `Entrez` 模块。用户输入一个基因 ID（如 `BRCA1`）或 Accession Number，后端自动从 NCBI 下载其 FASTA 序列。
-    *   **流程整合**：直接把下载下来的序列自动填入你的 PCR 引物设计表单中，实现“**输入基因名 -> 自动检索 -> 一键设计 PCR 引物**”的完整功能闭环。
-    *   **前端**：设计一个精美、现代的检索中心界面。
+### 2. Practical Tasks
+*   **Task 3: Implement the Needleman-Wunsch (Global Alignment) Algorithm**
+    *   **Backend**: Write the Needleman-Wunsch algorithm in Python from scratch without using third-party alignment libraries. The API should accept two sequences and return the score matrix, the traceback path, and the final aligned sequences.
+    *   **Frontend**: Render the dynamic programming alignment matrix as an interactive grid, highlighting the traceback path and indicating match (`|`) and gap (`-`) characters.
+*   **Task 4: Implement the Smith-Waterman (Local Alignment) Algorithm**
+    *   Modify the global alignment code to handle local alignment by adjusting the boundary scoring rules and traceback termination conditions.
 
 ---
 
-## 推荐学习资源与工具箱
+## Stage 3: Thermodynamic Properties & Primer Specificity
 
-### 1. 理论学习
-*   **在线平台**：[Rosalind](https://rosalind.info/) —— 一个通过编程解决生物信息学问题的绝佳闯关练习网站（极力推荐，从零实现各种经典算法）。
-*   **经典教材**：《生物信息学：序列与基因组分析》（Bioinformatics: Sequence and Genome Analysis）。
-*   **书籍**：《Python 生物信息学命令式与面向对象编程》（Bioinformatics Programming Using Python）。
+Delve deeper into the biological and thermodynamic constraints used by `primer3` under the hood.
 
-### 2. 生物 Python 核心库
-*   **[Biopython](https://biopython.org/)**：Python 生物信息学标准库，包含了几乎所有文件解析（FASTA, GenBank）、NCBI 对接以及简单比对算法的工具。
-*   **[primer3-py](https://pypi.org/project/primer3-py/)**：引物设计引擎。
+### 1. Learning Objectives
+*   Understand primer dimers (hairpins, self-dimerization, and cross-dimerization) and their thermodynamic principles.
+*   Understand melting temperature ($T_m$) calculations using basic formulas (e.g., Wallace formula) and the nearest-neighbor thermodynamic model.
+*   Understand the necessity of **specificity checks** to avoid off-target amplification.
+
+### 2. Practical Tasks
+*   **Task 5: Hairpin & Dimer Detection Tool**
+    *   **Backend**: Write an algorithm to scan a primer sequence for self-complementary regions, calculate the Gibbs free energy ($\Delta G$), and predict whether it is prone to forming hairpin loops.
+*   **Task 6: Primer Specificity BLAST Check**
+    *   Use the `Biopython` library to query NCBI servers remotely or set up a local `blastn` installation. BLAST your designed primers against a reference genome (e.g., Human or Mouse) to check for potential off-target amplification and display warnings in the frontend.
+
+---
+
+## Stage 4: Integration — Public Databases & Entrez APIs
+
+Real-world bioinformatics relies heavily on querying and downloading data from public biological databases.
+
+### 1. Learning Objectives
+*   Familiarize yourself with databases like NCBI and Ensembl, and standard file formats (FASTA, GenBank).
+*   Learn to retrieve gene, protein, and literature data programmatically using the NCBI Entrez API.
+
+### 2. Practical Tasks
+*   **Task 7: Gene Query & Automated Primer Design Pipeline**
+    *   **Backend**: Use the `Entrez` module in `Biopython` to allow users to search by gene ID (e.g., `BRCA1`) or Accession Number and retrieve the FASTA sequence directly from NCBI.
+    *   **Pipeline Integration**: Feed the retrieved sequence automatically into your existing PCR primer design API, creating a seamless workflow: **Search Gene -> Auto-Retrieve -> Design PCR Primers**.
+    *   **Frontend**: Build a clean, modern search and workflow dashboard interface.
+
+---
+
+## Recommended Learning Resources
+
+### 1. Theoretical & Hands-on Practice
+*   **Rosalind**: [rosalind.info](https://rosalind.info/) – A platform for learning bioinformatics through problem-solving. Strongly recommended to implement algorithms from scratch.
+*   **Textbook**: *Bioinformatics: Sequence and Genome Analysis* (by David W. Mount).
+*   **Book**: *Bioinformatics Programming Using Python* (by Mitchell L Model).
+
+### 2. Essential Python Libraries
+*   **[Biopython](https://biopython.org/)**: The industry standard library for parsing formats (FASTA, GenBank), interfacing with NCBI Entrez, and performing simple biological operations.
+*   **[primer3-py](https://pypi.org/project/primer3-py/)**: The core wrapper package used in this project for designing PCR primers.
