@@ -69,4 +69,4 @@ def api_design(request):
 
         primer_result = get_primer_result(sequence, int(seq_start), int(seq_end))
         result = primer_result
-    return JsonResponse(result)
+    return JsonResponse(result, safe=False)
