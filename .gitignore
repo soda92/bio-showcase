@@ -177,3 +177,13 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Frontend ignored files
+/frontend/.env
+/frontend/.env.development.local
+/frontend/.env.test.local
+/frontend/.env.production.local
+/frontend/.env.local
+/frontend/_fresh/
+/frontend/node_modules/
+/frontend/vendor/
