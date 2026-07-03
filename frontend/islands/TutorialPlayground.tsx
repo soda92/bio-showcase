@@ -7,143 +7,17 @@ import { oneDark } from "@codemirror/theme-one-dark";
 
 interface Step {
   id: number;
+  folder_name: string;
   title: string;
   subtitle: string;
   concept: string;
   goal: string;
   template: string;
+  solution: string;
   tests: string;
   paperTitle?: string;
   paperUrl?: string;
 }
-
-const TUTORIAL_STEPS: Step[] = [
-  {
-    id: 1,
-    title: "DNA Reverse Complement",
-    subtitle: "Understanding DNA Strands and Pairing",
-    concept:
-      `DNA is double-stranded. The two strands run in opposite directions ($5' \\rightarrow 3'$ and $3' \\rightarrow 5'$). 
-In molecular biology, when we write down a DNA sequence, we always write it in the $5' \\rightarrow 3'$ direction.
-
-For the two strands to bind, their bases must pair specifically:
-*   **Adenine (A)** pairs with **Thymine (T)**
-*   **Cytosine (C)** pairs with **Guanine (G)**
-
-To find the opposite strand of a sequence like **"ATCG"**, we must:
-1. Find its complement: **"TAGC"**
-2. Reverse it: **"CGAT"** (so it reads $5' \\rightarrow 3'$)
-
-This is a fundamental operation used in designing PCR primers (e.g., the reverse primer must target the complementary strand).`,
-    goal:
-      "Implement a function `reverse_complement(seq: str) -> str` that returns the reversed complementary DNA strand of a given sequence. Support uppercase A, T, C, G bases.",
-    template: `def reverse_complement(seq: str) -> str:
-    # Write your code here to return the reverse complement
-    complement = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
-    return "".join(complement[base] for base in reversed(seq))
-
-# Let's test it on a sample DNA sequence
-dna_seq = "ATCGGCAT"
-print(f"Original DNA: {dna_seq}")
-print(f"Reverse Complement: {reverse_complement(dna_seq)}")
-`,
-    tests: `assert reverse_complement("ATCG") == "CGAT", "Failed on 'ATCG'"
-assert reverse_complement("AAAA") == "TTTT", "Failed on 'AAAA'"
-assert reverse_complement("GCATGC") == "GCATGC", "Failed on 'GCATGC'"
-print("SUCCESS: All unit tests passed!")
-`,
-  },
-  {
-    id: 2,
-    title: "Sliding-Window GC Content",
-    subtitle: "Analyzing Local Sequence Chemistry",
-    concept:
-      `GC content represents the percentage of Guanine (G) and Cytosine (C) bases in a DNA molecule. 
-Unlike AT pairs (linked by 2 hydrogen bonds), GC pairs are linked by **3 hydrogen bonds**. This means regions with high GC content require more energy (higher temperature) to separate.
-
-In genomes, GC content is not uniform. Promoters and active gene regions often reside in high-GC regions called **CpG islands**.
-A **sliding window** analysis slides a fixed-size window across the sequence, calculating the GC content for each window to identify local genomic features.`,
-    goal:
-      "Implement `sliding_window_gc(seq: str, window_size: int) -> list` that returns a list of GC content percentages (from 0.0 to 100.0) for every window of size `window_size` in the sequence.",
-    template: `def sliding_window_gc(seq: str, window_size: int) -> list:
-    # Write your code here
-    # Return a list of GC percentages for each window
-    results = []
-    for i in range(len(seq) - window_size + 1):
-        window = seq[i:i+window_size]
-        gc_count = sum(1 for base in window if base in 'GC')
-        results.append((gc_count / window_size) * 100)
-    return results
-
-# Let's test it
-dna = "ATGCATGC"
-win = 4
-print(f"DNA: {dna}, Window Size: {win}")
-print(f"GC Profile: {sliding_window_gc(dna, win)}")
-`,
-    tests: `res = sliding_window_gc("ATGCATGC", 4)
-assert len(res) == 5, f"Expected 5 windows, got {len(res)}"
-assert res[0] == 50.0, f"Expected 50.0 for 'ATGC', got {res[0]}"
-assert res[2] == 50.0, f"Expected 50.0 for 'GCAT', got {res[2]}"
-assert sliding_window_gc("GGGG", 2) == [100.0, 100.0, 100.0], "Failed on 'GGGG'"
-print("SUCCESS: All unit tests passed!")
-`,
-  },
-  {
-    id: 3,
-    title: "Global Sequence Alignment",
-    subtitle: "The Needleman-Wunsch Algorithm",
-    concept:
-      `To compare two genes or proteins, we align them to find matching regions, insertions, and deletions. 
-The **Needleman-Wunsch** algorithm uses dynamic programming to find the optimal global alignment. 
-
-It constructs a scoring grid $DP[i][j]$ where:
-*   $DP[i][j]$ is the score of aligning the prefixes $seq1[0..i]$ and $seq2[0..j]$.
-*   Each cell is calculated as:
-    $$DP[i][j] = \\max(DP[i-1][j-1] + \\text{score}, DP[i-1][j] + \\text{gap}, DP[i][j-1] + \\text{gap})$$
-
-This algorithm is the foundation for search tools like BLAST and multiple sequence alignment.`,
-    goal:
-      "Implement `needleman_wunsch(seq1: str, seq2: str, match=1, mismatch=-1, gap=-1) -> int` that calculates and returns the optimal global alignment score between two sequences.",
-    template:
-      `def needleman_wunsch(seq1: str, seq2: str, match=1, mismatch=-1, gap=-1) -> int:
-    n, m = len(seq1), len(seq2)
-    # Initialize the DP grid
-    dp = [[0] * (m + 1) for _ in range(n + 1)]
-    for i in range(n + 1):
-        dp[i][0] = i * gap
-    for j in range(m + 1):
-        dp[0][j] = j * gap
-        
-    # Fill the grid
-    for i in range(1, n + 1):
-        for j in range(1, m + 1):
-            s = match if seq1[i-1] == seq2[j-1] else mismatch
-            dp[i][j] = max(
-                dp[i-1][j-1] + s,  # Match/Mismatch
-                dp[i-1][j] + gap,   # Gap in seq2
-                dp[i][j-1] + gap    # Gap in seq1
-            )
-            
-    # Return the optimal alignment score (bottom-right cell)
-    return dp[n][m]
-
-seq1 = "GATTACA"
-seq2 = "GCATACU"
-print(f"Aligning: {seq1} and {seq2}")
-print(f"Alignment Score: {needleman_wunsch(seq1, seq2)}")
-`,
-    tests:
-      `assert needleman_wunsch("GATTACA", "GCATACU") == 3, f"Expected 3, got {needleman_wunsch('GATTACA', 'GCATACU')}"
-assert needleman_wunsch("A", "A") == 1, "Failed on matching single letter"
-assert needleman_wunsch("A", "T") == -1, "Failed on mismatching single letter"
-assert needleman_wunsch("A", "") == -1, "Failed on gap"
-print("SUCCESS: All unit tests passed!")
-`,
-    paperTitle: "Needleman & Wunsch (1970) J. Mol. Biol.",
-    paperUrl: "https://pubmed.ncbi.nlm.nih.gov/5420325/",
-  },
-];
 
 function renderMarkdown(md: string) {
   try {
@@ -173,9 +47,10 @@ export default function TutorialPlayground(
   { backendUrl }: { backendUrl: string },
 ) {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const currentStep = TUTORIAL_STEPS[currentStepIndex];
+  const [chapters, setChapters] = useState<Step[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const [code, setCode] = useState(currentStep.template);
+  const [code, setCode] = useState("");
   const [output, setOutput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
@@ -184,6 +59,7 @@ export default function TutorialPlayground(
   // Splitter and sidebar states
   const [leftWidth, setLeftWidth] = useState(35); // Default to 35%
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [mode, setMode] = useState<"learn" | "practice">("learn");
 
   const editorRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
@@ -202,8 +78,30 @@ export default function TutorialPlayground(
       if (savedCollapsed) {
         setIsCollapsed(savedCollapsed === "true");
       }
+      const savedMode = localStorage.getItem("bio-tutorial-mode");
+      if (savedMode === "learn" || savedMode === "practice") {
+        setMode(savedMode);
+      }
     }
   }, []);
+
+  // Fetch chapters from the Django backend
+  useEffect(() => {
+    async function fetchChapters() {
+      try {
+        const response = await fetch(`${backendUrl}/primer/api/tutorial/chapters/`);
+        if (response.ok) {
+          const data = await response.json();
+          setChapters(data);
+        }
+      } catch (e) {
+        console.error("Failed to load chapters:", e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchChapters();
+  }, [backendUrl]);
 
   const toggleCollapse = () => {
     setIsCollapsed(prev => {
@@ -211,6 +109,11 @@ export default function TutorialPlayground(
       localStorage.setItem("bio-tutorial-is-collapsed", String(next));
       return next;
     });
+  };
+
+  const handleModeChange = (newMode: "learn" | "practice") => {
+    setMode(newMode);
+    localStorage.setItem("bio-tutorial-mode", newMode);
   };
 
   const startResizing = (mouseDownEvent: any) => {
@@ -263,38 +166,47 @@ export default function TutorialPlayground(
     });
   };
 
-  // Sync editor when step changes
+  // Synchronize and (re)initialize CodeMirror based on step, mode, or chapters load
   useEffect(() => {
-    const targetCode = currentStep.template;
+    if (chapters.length === 0 || !editorRef.current) return;
+
+    const currentStep = chapters[currentStepIndex];
+
+    // Destroy existing view
+    if (viewRef.current) {
+      viewRef.current.destroy();
+      viewRef.current = null;
+    }
+
+    const isReadOnly = mode === "learn";
+    let targetCode = "";
+
+    if (isReadOnly) {
+      targetCode = currentStep.solution;
+    } else {
+      // Load user's saved practice code from localStorage if available
+      const savedCode = localStorage.getItem(`bio-tutorial-practice-code-${currentStep.id}`);
+      targetCode = savedCode !== null ? savedCode : currentStep.template;
+    }
+
+    // Update local react code state
     setCode(targetCode);
     setOutput("");
     setIsSuccess(null);
 
-    // Update CodeMirror content if it's initialized
-    if (viewRef.current) {
-      const currentDoc = viewRef.current.state.doc.toString();
-      if (currentDoc !== targetCode) {
-        viewRef.current.dispatch({
-          changes: { from: 0, to: currentDoc.length, insert: targetCode }
-        });
-      }
-    }
-  }, [currentStepIndex]);
-
-  // Initialize CodeMirror editor
-  useEffect(() => {
-    if (!editorRef.current) return;
-
     const view = new EditorView({
       state: EditorState.create({
-        doc: code,
+        doc: targetCode,
         extensions: [
           basicSetup,
           python(),
           oneDark,
+          EditorState.readOnly.of(isReadOnly),
           EditorView.updateListener.of((update) => {
-            if (update.docChanged) {
-              setCode(update.state.doc.toString());
+            if (update.docChanged && !isReadOnly) {
+              const newValue = update.state.doc.toString();
+              setCode(newValue);
+              localStorage.setItem(`bio-tutorial-practice-code-${currentStep.id}`, newValue);
             }
           }),
           EditorView.theme({
@@ -310,8 +222,9 @@ export default function TutorialPlayground(
 
     return () => {
       view.destroy();
+      viewRef.current = null;
     };
-  }, []);
+  }, [currentStepIndex, mode, chapters]);
 
   const handleRun = async () => {
     setIsLoading(true);
@@ -342,15 +255,20 @@ export default function TutorialPlayground(
   };
 
   const handleVerify = async () => {
+    if (chapters.length === 0) return;
+    const currentStep = chapters[currentStepIndex];
     setIsLoading(true);
     setIsSuccess(null);
-    setOutput("Running validation tests...\n");
+    setOutput("Running validation tests via pytest...\n");
 
     try {
       const response = await fetch(`${backendUrl}/primer/api/sandbox/test/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code, tests: currentStep.tests }),
+        body: JSON.stringify({ 
+          code, 
+          chapter_folder: currentStep.folder_name 
+        }),
       });
       const data = await response.json();
       if (data.success && data.stdout.includes("SUCCESS")) {
@@ -375,10 +293,14 @@ export default function TutorialPlayground(
   };
 
   const handleReset = () => {
+    if (mode === "learn" || chapters.length === 0) return; // Reset does nothing in Learn mode
+    const currentStep = chapters[currentStepIndex];
+
     const targetCode = currentStep.template;
     setCode(targetCode);
     setOutput("");
     setIsSuccess(null);
+    localStorage.removeItem(`bio-tutorial-practice-code-${currentStep.id}`);
 
     if (viewRef.current) {
       const currentDoc = viewRef.current.state.doc.toString();
@@ -387,6 +309,27 @@ export default function TutorialPlayground(
       });
     }
   };
+
+  if (loading) {
+    return (
+      <div class="flex-grow w-full flex items-center justify-center bg-gray-50 h-[calc(100vh-56px)]">
+        <div class="flex flex-col items-center space-y-4">
+          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+          <span class="text-gray-500 font-medium text-sm">Loading Bioinformatics Tutorial...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (chapters.length === 0) {
+    return (
+      <div class="flex-grow w-full flex items-center justify-center bg-gray-50 h-[calc(100vh-56px)]">
+        <span class="text-red-500 font-medium text-sm">Error: No tutorial chapters found. Please check backend.</span>
+      </div>
+    );
+  }
+
+  const currentStep = chapters[currentStepIndex];
 
   return (
     <main class="flex-grow w-full flex flex-row h-[calc(100vh-56px)] overflow-hidden bg-gray-50 relative">
@@ -399,7 +342,7 @@ export default function TutorialPlayground(
         <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-6 py-3 flex-none flex items-center justify-between">
           <div class="flex-grow mr-2">
             <label class="block text-[10px] uppercase tracking-wider text-blue-200 font-semibold mb-0.5">
-              Bioinformatics Step {currentStep.id} of {TUTORIAL_STEPS.length}
+              Bioinformatics Step {currentStep.id} of {chapters.length}
             </label>
             <select
               value={currentStepIndex}
@@ -409,7 +352,7 @@ export default function TutorialPlayground(
                 )}
               class="bg-indigo-900 text-white font-bold text-xs py-1 px-1.5 rounded focus:outline-none focus:ring-2 focus:ring-blue-300 w-full cursor-pointer"
             >
-              {TUTORIAL_STEPS.map((step, idx) => (
+              {chapters.map((step, idx) => (
                 <option key={step.id} value={idx}>
                   {step.id}. {step.title}
                 </option>
@@ -508,6 +451,31 @@ export default function TutorialPlayground(
               <span class="text-xs text-gray-400 font-mono ml-2">main.py</span>
             </div>
             <div class="flex items-center space-x-3">
+              {/* Learn / Practice Selector */}
+              <div class="flex bg-[#1a1a1a] rounded p-0.5 border border-gray-800">
+                <button
+                  onClick={() => handleModeChange("learn")}
+                  class={`px-3 py-1 rounded text-xs font-semibold transition-all ${
+                    mode === "learn"
+                      ? "bg-indigo-600 text-white shadow-sm"
+                      : "text-gray-400 hover:text-gray-200"
+                  }`}
+                >
+                  Learn
+                </button>
+                <button
+                  onClick={() => handleModeChange("practice")}
+                  class={`px-3 py-1 rounded text-xs font-semibold transition-all ${
+                    mode === "practice"
+                      ? "bg-indigo-600 text-white shadow-sm"
+                      : "text-gray-400 hover:text-gray-200"
+                  }`}
+                >
+                  Practice
+                </button>
+              </div>
+
+              {/* Font Size Selector */}
               <div class="flex items-center space-x-1 bg-[#1a1a1a] rounded px-1.5 py-0.5 border border-gray-800 select-none">
                 <button
                   onClick={decreaseFontSize}
@@ -525,12 +493,15 @@ export default function TutorialPlayground(
                   A+
                 </button>
               </div>
-              <button
-                onClick={handleReset}
-                class="text-xs text-gray-400 hover:text-white px-2 py-1 rounded bg-[#3a3a3a] transition-all hover:bg-red-900"
-              >
-                Reset Code
-              </button>
+
+              {mode === "practice" && (
+                <button
+                  onClick={handleReset}
+                  class="text-xs text-gray-400 hover:text-white px-2 py-1 rounded bg-[#3a3a3a] transition-all hover:bg-red-900"
+                >
+                  Reset Code
+                </button>
+              )}
             </div>
           </div>
 
@@ -538,49 +509,53 @@ export default function TutorialPlayground(
           <div ref={editorRef} class="flex-grow overflow-hidden font-mono" style={{ fontSize: `${fontSize}px` }} />
 
           {/* Action Bar */}
-          <div class="bg-[#2d2d2d] px-4 py-3 flex gap-3 justify-end border-t border-gray-800">
-            <button
-              onClick={handleRun}
-              disabled={isLoading}
-              class="bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all text-white font-semibold py-2 px-4 rounded text-sm disabled:opacity-50"
-            >
-              {isLoading ? "Running..." : "Run Code"}
-            </button>
-            <button
-              onClick={handleVerify}
-              disabled={isLoading}
-              class="bg-green-600 hover:bg-green-700 active:scale-95 transition-all text-white font-semibold py-2 px-4 rounded text-sm disabled:opacity-50 flex items-center gap-1"
-            >
-              Verify Solution
-            </button>
-          </div>
+          {mode === "practice" && (
+            <div class="bg-[#2d2d2d] px-4 py-3 flex gap-3 justify-end border-t border-gray-800 flex-shrink-0">
+              <button
+                onClick={handleRun}
+                disabled={isLoading}
+                class="bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all text-white font-semibold py-2 px-4 rounded text-sm disabled:opacity-50"
+              >
+                {isLoading ? "Running..." : "Run Code"}
+              </button>
+              <button
+                onClick={handleVerify}
+                disabled={isLoading}
+                class="bg-green-600 hover:bg-green-700 active:scale-95 transition-all text-white font-semibold py-2 px-4 rounded text-sm disabled:opacity-50 flex items-center gap-1"
+              >
+                Verify Solution
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Terminal/Console Output */}
-        <div class="h-44 bg-[#0d0d0d] rounded-xl border border-gray-800 overflow-hidden flex flex-col">
-          <div class="bg-[#181818] px-4 py-2 border-b border-gray-800 flex justify-between items-center">
-            <span class="text-xs uppercase tracking-wider text-gray-400 font-bold font-mono">
-              Console Output
-            </span>
-            {isSuccess === true && (
-              <span class="text-xs font-bold bg-green-950 text-green-400 px-2 py-0.5 rounded border border-green-700 animate-bounce">
-                ✔ Success
+        {mode === "practice" && (
+          <div class="h-44 bg-[#0d0d0d] rounded-xl border border-gray-800 overflow-hidden flex flex-col flex-shrink-0">
+            <div class="bg-[#181818] px-4 py-2 border-b border-gray-800 flex justify-between items-center">
+              <span class="text-xs uppercase tracking-wider text-gray-400 font-bold font-mono">
+                Console Output
               </span>
-            )}
-            {isSuccess === false && (
-              <span class="text-xs font-bold bg-red-950 text-red-400 px-2 py-0.5 rounded border border-red-700">
-                ✘ Failed
-              </span>
-            )}
+              {isSuccess === true && (
+                <span class="text-xs font-bold bg-green-950 text-green-400 px-2 py-0.5 rounded border border-green-700 animate-bounce">
+                  ✔ Success
+                </span>
+              )}
+              {isSuccess === false && (
+                <span class="text-xs font-bold bg-red-950 text-red-400 px-2 py-0.5 rounded border border-red-700">
+                  ✘ Failed
+                </span>
+              )}
+            </div>
+            <div 
+              class="flex-grow p-4 overflow-y-auto font-mono text-[#d4d4d4] whitespace-pre-wrap select-all"
+              style={{ fontSize: `${Math.max(10, fontSize - 2)}px` }}
+            >
+              <span class="text-green-500 mr-1">&gt;</span>
+              {output || "Output will be displayed here..."}
+            </div>
           </div>
-          <div 
-            class="flex-grow p-4 overflow-y-auto font-mono text-[#d4d4d4] whitespace-pre-wrap select-all"
-            style={{ fontSize: `${Math.max(10, fontSize - 2)}px` }}
-          >
-            <span class="text-green-500 mr-1">&gt;</span>
-            {output || "Output will be displayed here..."}
-          </div>
-        </div>
+        )}
       </section>
     </main>
   );

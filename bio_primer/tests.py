@@ -119,3 +119,55 @@ class PrimerDesignTests(TestCase):
         data = response.json()
         self.assertTrue(data["success"])
 
+    def test_api_tutorial_chapters_success(self):
+        """Test that the tutorial chapters list is successfully returned from code files."""
+        response = self.client.get(reverse('primer:api_tutorial_chapters'))
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIsInstance(data, list)
+        self.assertEqual(len(data), 3)
+        self.assertEqual(data[0]['id'], 1)
+        self.assertEqual(data[0]['folder_name'], '01_reverse_complement')
+        self.assertIn('def reverse_complement(seq: str) -> str:', data[0]['solution'])
+        self.assertIn('pass', data[0]['template'])
+        self.assertIn('Reverse Complement', data[0]['title'])
+
+    def test_api_sandbox_test_pytest_success(self):
+        """Test that pytest execution runs successfully on correct solution."""
+        correct_code = (
+            "def reverse_complement(seq: str) -> str:\n"
+            "    complement = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}\n"
+            "    return ''.join(complement[base] for base in reversed(seq))\n"
+        )
+        response = self.client.post(
+            reverse('primer:api_sandbox_test'),
+            data=json.dumps({
+                "code": correct_code,
+                "chapter_folder": "01_reverse_complement"
+            }),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertTrue(data["success"])
+        self.assertIn("All unit tests passed", data["stdout"])
+
+    def test_api_sandbox_test_pytest_failure(self):
+        """Test that pytest execution fails on wrong solution."""
+        wrong_code = (
+            "def reverse_complement(seq: str) -> str:\n"
+            "    return seq\n"
+        )
+        response = self.client.post(
+            reverse('primer:api_sandbox_test'),
+            data=json.dumps({
+                "code": wrong_code,
+                "chapter_folder": "01_reverse_complement"
+            }),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertFalse(data["success"])
+        self.assertNotEqual(data["exit_code"], 0)
+
