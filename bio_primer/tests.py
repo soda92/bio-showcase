@@ -125,7 +125,7 @@ class PrimerDesignTests(TestCase):
         self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertIsInstance(data, list)
-        self.assertEqual(len(data), 3)
+        self.assertEqual(len(data), 7)
         self.assertEqual(data[0]['id'], 1)
         self.assertEqual(data[0]['folder_name'], '01_reverse_complement')
         self.assertIn('def reverse_complement(seq: str) -> str:', data[0]['solution'])
