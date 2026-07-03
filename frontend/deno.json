@@ -14,7 +14,12 @@
     "@fresh/plugin-tailwind": "jsr:@fresh/plugin-tailwind@^1.0.0",
     "preact": "npm:preact@^10.29.1",
     "@preact/signals": "npm:@preact/signals@^2.9.0",
-    "tailwindcss": "npm:tailwindcss@^4.0.0"
+    "tailwindcss": "npm:tailwindcss@^4.0.0",
+    "marked": "npm:marked@^12.0.1",
+    "codemirror": "npm:codemirror@^6.0.1",
+    "@codemirror/state": "npm:@codemirror/state@^6.4.1",
+    "@codemirror/lang-python": "npm:@codemirror/lang-python@^6.1.6",
+    "@codemirror/theme-one-dark": "npm:@codemirror/theme-one-dark@^6.1.2"
   },
   "compilerOptions": {
     "lib": ["dom", "dom.asynciterable", "dom.iterable", "deno.ns"],

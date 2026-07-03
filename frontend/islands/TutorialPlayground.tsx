@@ -1,4 +1,9 @@
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useState, useRef } from "preact/hooks";
+import { marked } from "marked";
+import { EditorView, basicSetup } from "codemirror";
+import { EditorState } from "@codemirror/state";
+import { python } from "@codemirror/lang-python";
+import { oneDark } from "@codemirror/theme-one-dark";
 
 interface Step {
   id: number;
@@ -140,6 +145,30 @@ print("SUCCESS: All unit tests passed!")
   },
 ];
 
+function renderMarkdown(md: string) {
+  try {
+    let content = md;
+    
+    // Custom Latex/Math math rendering replacements
+    content = content.replace(/\$\$DP\[i\]\[j\] = \\max\(.*?\)\$\$/g, () => {
+      return `<div class="bg-gray-50 border border-gray-100 p-2.5 rounded font-mono text-xs my-2 text-center text-indigo-900 overflow-x-auto">
+        DP[i][j] = max(DP[i-1][j-1] + score, DP[i-1][j] + gap, DP[i][j-1] + gap)
+      </div>`;
+    });
+    content = content.replace(/\$5' \\rightarrow 3'\$/g, "5' → 3'");
+    content = content.replace(/\$3' \\rightarrow 5'\$/g, "3' → 5'");
+    content = content.replace(/\$DP\[i\]\[j\]\$/g, "<code class='bg-gray-100 text-gray-800 px-1 rounded font-mono text-xs'>DP[i][j]</code>");
+    content = content.replace(/\$seq1\[0\.\.i\]\$/g, "<code class='bg-gray-100 text-gray-800 px-1 rounded font-mono text-xs'>seq1[0..i]</code>");
+    content = content.replace(/\$seq2\[0\.\.j\]\$/g, "<code class='bg-gray-100 text-gray-800 px-1 rounded font-mono text-xs'>seq2[0..j]</code>");
+
+    // Pass the parsed markdown to marked
+    return marked.parse(content) as string;
+  } catch (e) {
+    console.error("Markdown parsing failed:", e);
+    return md;
+  }
+}
+
 export default function TutorialPlayground(
   { backendUrl }: { backendUrl: string },
 ) {
@@ -150,13 +179,89 @@ export default function TutorialPlayground(
   const [output, setOutput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
+  const [fontSize, setFontSize] = useState(14); // Default to 14px
+
+  const editorRef = useRef<HTMLDivElement>(null);
+  const viewRef = useRef<EditorView | null>(null);
+
+  // Load font size from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("bio-tutorial-font-size");
+      if (saved) {
+        const val = parseInt(saved, 10);
+        if (val >= 10 && val <= 24) {
+          setFontSize(val);
+        }
+      }
+    }
+  }, []);
+
+  const increaseFontSize = () => {
+    setFontSize((prev) => {
+      const next = Math.min(24, prev + 1);
+      localStorage.setItem("bio-tutorial-font-size", String(next));
+      return next;
+    });
+  };
+
+  const decreaseFontSize = () => {
+    setFontSize((prev) => {
+      const next = Math.max(10, prev - 1);
+      localStorage.setItem("bio-tutorial-font-size", String(next));
+      return next;
+    });
+  };
 
   // Sync editor when step changes
   useEffect(() => {
-    setCode(currentStep.template);
+    const targetCode = currentStep.template;
+    setCode(targetCode);
     setOutput("");
     setIsSuccess(null);
+
+    // Update CodeMirror content if it's initialized
+    if (viewRef.current) {
+      const currentDoc = viewRef.current.state.doc.toString();
+      if (currentDoc !== targetCode) {
+        viewRef.current.dispatch({
+          changes: { from: 0, to: currentDoc.length, insert: targetCode }
+        });
+      }
+    }
   }, [currentStepIndex]);
+
+  // Initialize CodeMirror editor
+  useEffect(() => {
+    if (!editorRef.current) return;
+
+    const view = new EditorView({
+      state: EditorState.create({
+        doc: code,
+        extensions: [
+          basicSetup,
+          python(),
+          oneDark,
+          EditorView.updateListener.of((update) => {
+            if (update.docChanged) {
+              setCode(update.state.doc.toString());
+            }
+          }),
+          EditorView.theme({
+            "&": { height: "100%" },
+            ".cm-scroller": { overflow: "auto" }
+          })
+        ]
+      }),
+      parent: editorRef.current
+    });
+
+    viewRef.current = view;
+
+    return () => {
+      view.destroy();
+    };
+  }, []);
 
   const handleRun = async () => {
     setIsLoading(true);
@@ -220,17 +325,23 @@ export default function TutorialPlayground(
   };
 
   const handleReset = () => {
-    setCode(currentStep.template);
+    const targetCode = currentStep.template;
+    setCode(targetCode);
     setOutput("");
     setIsSuccess(null);
+
+    if (viewRef.current) {
+      const currentDoc = viewRef.current.state.doc.toString();
+      viewRef.current.dispatch({
+        changes: { from: 0, to: currentDoc.length, insert: targetCode }
+      });
+    }
   };
 
-  const lines = code.split("\n");
-
   return (
-    <main class="flex-grow container mx-auto px-4 py-8 flex flex-col md:flex-row gap-6">
+    <main class="flex-grow w-full px-6 py-4 flex flex-col md:flex-row gap-4 h-[calc(100vh-56px)] overflow-hidden bg-gray-50">
       {/* Left panel: Slide Content */}
-      <section class="w-full md:w-5/12 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden flex flex-col h-[calc(100vh-220px)] min-h-[500px]">
+      <section class="w-full md:w-5/12 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full">
         {/* Step Selector Header */}
         <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-6 py-4 flex-none">
           <label class="block text-xs uppercase tracking-wider text-blue-200 font-semibold mb-1">
@@ -264,15 +375,17 @@ export default function TutorialPlayground(
           </div>
 
           <div class="border-t border-gray-100 pt-4">
-            <h4 class="text-sm font-bold uppercase tracking-wider text-gray-400 mb-2">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
               Biological Concept
             </h4>
-            <div class="text-gray-600 leading-relaxed text-sm whitespace-pre-line font-sans">
-              {currentStep.concept}
-            </div>
+            <div 
+              class="text-gray-600 leading-relaxed font-sans"
+              style={{ fontSize: `${fontSize}px` }}
+              dangerouslySetInnerHTML={{ __html: renderMarkdown(currentStep.concept) }}
+            />
           </div>
 
-          <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-lg">
+          <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-lg" style={{ fontSize: `${fontSize}px` }}>
             <h4 class="text-sm font-bold text-indigo-900 mb-1">
               Your Objective
             </h4>
@@ -299,7 +412,7 @@ export default function TutorialPlayground(
       </section>
 
       {/* Right panel: Editor & Terminal */}
-      <section class="w-full md:w-7/12 flex flex-col h-[calc(100vh-220px)] min-h-[500px] gap-4">
+      <section class="w-full md:w-7/12 flex flex-col h-full gap-4 overflow-hidden">
         {/* Editor Container */}
         <div class="flex-grow bg-[#1e1e1e] rounded-xl shadow-2xl border border-gray-800 overflow-hidden flex flex-col">
           {/* Editor Header */}
@@ -310,30 +423,35 @@ export default function TutorialPlayground(
               <span class="h-3 w-3 rounded-full bg-green-500"></span>
               <span class="text-xs text-gray-400 font-mono ml-4">main.py</span>
             </div>
-            <button
-              onClick={handleReset}
-              class="text-xs text-gray-400 hover:text-white px-2 py-1 rounded bg-[#3a3a3a] transition-all hover:bg-red-900"
-            >
-              Reset Code
-            </button>
+            <div class="flex items-center space-x-3">
+              <div class="flex items-center space-x-1 bg-[#1a1a1a] rounded px-1.5 py-0.5 border border-gray-800 select-none">
+                <button
+                  onClick={decreaseFontSize}
+                  title="Decrease Font Size"
+                  class="text-gray-400 hover:text-white font-bold text-xs px-1"
+                >
+                  A-
+                </button>
+                <span class="text-[10px] text-gray-500 font-mono px-1">{fontSize}px</span>
+                <button
+                  onClick={increaseFontSize}
+                  title="Increase Font Size"
+                  class="text-gray-400 hover:text-white font-bold text-xs px-1"
+                >
+                  A+
+                </button>
+              </div>
+              <button
+                onClick={handleReset}
+                class="text-xs text-gray-400 hover:text-white px-2 py-1 rounded bg-[#3a3a3a] transition-all hover:bg-red-900"
+              >
+                Reset Code
+              </button>
+            </div>
           </div>
 
-          {/* Editor Textarea with Line Numbers */}
-          <div class="flex-grow flex font-mono text-sm overflow-hidden bg-[#1e1e1e]">
-            {/* Line Numbers strip */}
-            <div class="flex-none w-10 text-right pr-3 select-none text-gray-600 font-mono text-sm border-r border-gray-800 pt-3 bg-[#1a1a1a]">
-              {lines.map((_, i) => (
-                <div key={i} class="h-6 leading-6">{i + 1}</div>
-              ))}
-            </div>
-            {/* Editor Area */}
-            <textarea
-              value={code}
-              onInput={(e) => setCode((e.target as HTMLTextAreaElement).value)}
-              class="flex-grow bg-transparent text-[#f8f8f2] p-3 focus:outline-none resize-none font-mono text-sm leading-6 selection:bg-indigo-900 caret-white outline-none overflow-y-auto"
-              spellcheck={false}
-            />
-          </div>
+          {/* CodeMirror Editor Area */}
+          <div ref={editorRef} class="flex-grow overflow-hidden font-mono" style={{ fontSize: `${fontSize}px` }} />
 
           {/* Action Bar */}
           <div class="bg-[#2d2d2d] px-4 py-3 flex gap-3 justify-end border-t border-gray-800">
@@ -371,7 +489,10 @@ export default function TutorialPlayground(
               </span>
             )}
           </div>
-          <div class="flex-grow p-4 overflow-y-auto font-mono text-xs text-[#d4d4d4] whitespace-pre-wrap select-all">
+          <div 
+            class="flex-grow p-4 overflow-y-auto font-mono text-[#d4d4d4] whitespace-pre-wrap select-all"
+            style={{ fontSize: `${Math.max(10, fontSize - 2)}px` }}
+          >
             <span class="text-green-500 mr-1">&gt;</span>
             {output || "Output will be displayed here..."}
           </div>
