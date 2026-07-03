@@ -1,5 +1,4 @@
 // components/Card.tsx
-import { h } from "preact";
 
 export function Card({ link, description, backgroundImage }: {
   link: string;
@@ -21,17 +20,21 @@ export function Card({ link, description, backgroundImage }: {
         text-center text-lg font-semibold text-gray-800
         group // For styling children on hover
       "
-      style={backgroundImage ? {
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      } : {}}
+      style={backgroundImage
+        ? {
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }
+        : {}}
     >
       {/* Overlay for text readability on background image */}
       {backgroundImage && (
-        <div class="absolute inset-0 bg-black opacity-30 group-hover:opacity-40 transition-opacity duration-200 rounded-lg"></div>
+        <div class="absolute inset-0 bg-black opacity-30 group-hover:opacity-40 transition-opacity duration-200 rounded-lg">
+        </div>
       )}
-      <span class="relative z-10 text-white text-shadow-md"> {/* Ensure text is on top and readable */}
+      <span class="relative z-10 text-white text-shadow-md">
+        {/* Ensure text is on top and readable */}
         {description}
       </span>
     </a>

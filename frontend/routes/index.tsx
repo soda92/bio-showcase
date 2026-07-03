@@ -17,15 +17,23 @@ import { Card } from "../components/Card.tsx";
 
 export default function Home() {
   return (
-    <div class="min-h-screen flex flex-col"> {/* Ensure content takes full height */}
+    <div class="min-h-screen flex flex-col">
+      {/* Ensure content takes full height */}
       <Header />
       {/* Main content area for cards */}
-      <main class="flex-grow container mx-auto px-4 py-8"> {/* Responsive padding, centers cards */}
-        <div class="flex flex-wrap justify-center gap-6 md:gap-8"> {/* Centers and spaces cards */}
+      <main class="flex-grow container mx-auto px-4 py-8">
+        {/* Responsive padding, centers cards */}
+        <div class="flex flex-wrap justify-center gap-6 md:gap-8">
+          {/* Centers and spaces cards */}
           <Card
             link="/primer"
             description="PCR Primer Design"
             backgroundImage="/dna-1.png" // Replace with your actual path
+          />
+          <Card
+            link="/tutorial"
+            description="Bioinformatics Tutorial"
+            backgroundImage="/dna-1.png"
           />
           {/* Add more cards as needed */}
         </div>

@@ -80,3 +80,42 @@ class PrimerDesignTests(TestCase):
         data = response.json()
         self.assertIsInstance(data, list)
         self.assertEqual(data[0]['error_message'], 'parameter error')
+
+    def test_api_sandbox_run_success(self):
+        """Test that code executes successfully and returns stdout."""
+        response = self.client.post(
+            reverse('primer:api_sandbox_run'),
+            data=json.dumps({"code": "print('hello from sandbox')\n"}),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertTrue(data["success"])
+        self.assertEqual(data["stdout"].strip(), "hello from sandbox")
+
+    def test_api_sandbox_run_timeout(self):
+        """Test that infinite loop code is terminated by the timeout."""
+        response = self.client.post(
+            reverse('primer:api_sandbox_run'),
+            data=json.dumps({"code": "import time\nwhile True: time.sleep(0.01)"}),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertFalse(data["success"])
+        self.assertIn("Time limit exceeded", data["error"])
+
+    def test_api_sandbox_test_success(self):
+        """Test that assertions can run against user code."""
+        response = self.client.post(
+            reverse('primer:api_sandbox_test'),
+            data=json.dumps({
+                "code": "def double(x):\n    return x * 2\n",
+                "tests": "assert double(3) == 6\n"
+            }),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertTrue(data["success"])
+

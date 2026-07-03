@@ -70,3 +70,35 @@ def api_design(request):
         primer_result = get_primer_result(sequence, int(seq_start), int(seq_end))
         result = primer_result
     return JsonResponse(result, safe=False)
+
+
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from .sandbox import execute_code
+
+@csrf_exempt
+@require_POST
+def api_sandbox_run(request):
+    try:
+        data = json.loads(request.body)
+        code = data.get("code", "")
+    except (json.JSONDecodeError, TypeError, KeyError):
+        return JsonResponse({"success": False, "error": "Invalid JSON body"}, status=400)
+    
+    res = execute_code(code)
+    return JsonResponse(res)
+
+
+@csrf_exempt
+@require_POST
+def api_sandbox_test(request):
+    try:
+        data = json.loads(request.body)
+        code = data.get("code", "")
+        tests = data.get("tests", "")
+    except (json.JSONDecodeError, TypeError, KeyError):
+        return JsonResponse({"success": False, "error": "Invalid JSON body"}, status=400)
+    
+    full_code = f"{code}\n\n{tests}"
+    res = execute_code(full_code)
+    return JsonResponse(res)
