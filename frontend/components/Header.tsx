@@ -16,7 +16,7 @@ export function Header() {
             alt="Site Logo"
             class="h-14 w-14 flex-shrink-0" // flex-shrink-0 prevents shrinking
           />
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
+          <h1 class="text-2xl sm:text-3xl font-black text-red-600 underline tracking-widest leading-tight">
             {/* Larger text, bolder font */}
             Bioinformatics Tools
           </h1>
