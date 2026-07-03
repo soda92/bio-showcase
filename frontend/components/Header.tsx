@@ -1,25 +1,22 @@
-// components/Header.tsx
-import { h } from "preact";
-
 export function Header() {
   return (
-    <header
-      class="h-[110px] sm:!h-[144px] w-full bg-cover bg-no-repeat relative"
-      // You could even add a background image here if desired
-      // style={{ backgroundImage: 'url(/path-to-header-bg.jpg)', backgroundSize: 'cover' }}
-    >
-      <div class="rainfall w-full h-full absolute" /> {/* Assuming 'rainfall' is a visual effect */}
-      <nav class="w-11/12 h-24 max-w-5xl mx-auto flex items-center justify-start relative px-4 sm:px-6"> {/* Added px-4 sm:px-6 */}
-        <a href="/" class="flex items-center space-x-3"> {/* Use flex to align logo and title */}
+    <header class="h-14 w-full bg-white border-b border-gray-200 flex items-center shadow-sm">
+      <nav class="w-full max-w-7xl mx-auto flex items-center justify-between px-6">
+        <a href="/" class="flex items-center space-x-2.5">
           <img
             src="/favicon.ico"
             alt="Site Logo"
-            class="h-14 w-14 flex-shrink-0" // flex-shrink-0 prevents shrinking
+            class="h-8 w-8 flex-shrink-0"
           />
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight"> {/* Larger text, bolder font */}
+          <h1 class="text-lg font-bold text-gray-800 tracking-wide">
             Bioinformatics Tools
           </h1>
         </a>
+        <div class="flex items-center space-x-6 text-sm font-medium text-gray-500">
+          <a href="/tutorial" class="hover:text-indigo-600 transition-colors">Tutorial</a>
+          <a href="/primer" class="hover:text-indigo-600 transition-colors">PCR Primer</a>
+          <a href="/about" class="hover:text-indigo-600 transition-colors">About</a>
+        </div>
       </nav>
     </header>
   );

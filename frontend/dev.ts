@@ -5,9 +5,10 @@ import { Builder } from "fresh/dev";
 import { app } from "./main.ts";
 
 const builder = new Builder();
-tailwind(builder, app, {});
+tailwind(builder, {});
 if (Deno.args.includes("build")) {
-  await builder.build(app);
+  const applySnapshot = await builder.build();
+  applySnapshot(app);
 } else {
-  await builder.listen(app);
+  await builder.listen(() => Promise.resolve(app));
 }

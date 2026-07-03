@@ -50,6 +50,36 @@
           "url": "https://tailwindcss.com/docs/functions-and-directives#variants"
         }
       ]
+    },
+    {
+      "name": "@source",
+      "description": "Use the `@source` directive to explicitly include or exclude files and directories from Tailwind v4's automatic content detection.",
+      "references": [
+        {
+          "name": "Tailwind Documentation",
+          "url": "https://tailwindcss.com/docs/detecting-classes-in-source-files#explicitly-registering-sources"
+        }
+      ]
+    },
+    {
+      "name": "@theme",
+      "description": "Use the `@theme` directive to define or customize your design tokens (colors, fonts, screens, etc.) directly in CSS in Tailwind v4.",
+      "references": [
+        {
+          "name": "Tailwind Documentation",
+          "url": "https://tailwindcss.com/docs/theme"
+        }
+      ]
+    },
+    {
+      "name": "@utility",
+      "description": "Use the `@utility` directive to define custom utility classes in Tailwind v4.",
+      "references": [
+        {
+          "name": "Tailwind Documentation",
+          "url": "https://tailwindcss.com/docs/adding-custom-styles#adding-custom-utilities"
+        }
+      ]
     }
   ]
 }

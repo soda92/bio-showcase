@@ -1,36 +1,28 @@
 {
   "tasks": {
     "check": "deno fmt --check . && deno lint . && deno check **/*.ts && deno check **/*.tsx",
-    "dev": "deno run -A --watch=static/,routes/ dev.ts",
+    "dev": "deno run -A --watch=static/,routes/,islands/,components/ dev.ts",
     "build": "deno run -A dev.ts build",
     "start": "deno run -A main.ts",
     "update": "deno run -A -r jsr:@fresh/update ."
   },
-  "lint": {
-    "rules": {
-      "tags": [
-        "fresh",
-        "recommended"
-      ]
-    }
-  },
-  "exclude": [
-    "**/_fresh/*"
-  ],
+  "lint": { "rules": { "tags": ["fresh", "recommended"] } },
+  "nodeModulesDir": "auto",
+  "exclude": ["**/_fresh/*"],
   "imports": {
-    "fresh": "jsr:@fresh/core@^2.0.0-alpha.34",
-    "@fresh/plugin-tailwind": "jsr:@fresh/plugin-tailwind@^0.0.1-alpha.7",
-    "preact": "npm:preact@^10.26.6",
-    "@preact/signals": "npm:@preact/signals@^2.0.4",
-    "tailwindcss": "npm:tailwindcss@^3.4.3"
+    "fresh": "jsr:@fresh/core@^2.3.3",
+    "@fresh/plugin-tailwind": "jsr:@fresh/plugin-tailwind@^1.0.0",
+    "preact": "npm:preact@^10.29.1",
+    "@preact/signals": "npm:@preact/signals@^2.9.0",
+    "tailwindcss": "npm:tailwindcss@^4.0.0",
+    "marked": "npm:marked@^12.0.1",
+    "codemirror": "npm:codemirror@^6.0.1",
+    "@codemirror/state": "npm:@codemirror/state@^6.4.1",
+    "@codemirror/lang-python": "npm:@codemirror/lang-python@^6.1.6",
+    "@codemirror/theme-one-dark": "npm:@codemirror/theme-one-dark@^6.1.2"
   },
   "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.asynciterable",
-      "dom.iterable",
-      "deno.ns"
-    ],
+    "lib": ["dom", "dom.asynciterable", "dom.iterable", "deno.ns"],
     "jsx": "precompile",
     "jsxImportSource": "preact",
     "jsxPrecompileSkipElements": [
@@ -39,7 +31,15 @@
       "source",
       "body",
       "html",
-      "head"
+      "head",
+      "title",
+      "meta",
+      "script",
+      "link",
+      "style",
+      "base",
+      "noscript",
+      "template"
     ]
   }
 }
