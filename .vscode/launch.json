@@ -23,8 +23,9 @@
             "runtimeExecutable": "deno",
             "runtimeArgs": [
                 "run",
-                "--inspect-wait",
-                "--allow-all"
+                "--inspect",
+                "--allow-all",
+                "--watch=static/,routes/,islands/,components/"
             ],
             "attachSimplePort": 9229,
             "console": "integratedTerminal"

@@ -171,3 +171,25 @@ class PrimerDesignTests(TestCase):
         self.assertFalse(data["success"])
         self.assertNotEqual(data["exit_code"], 0)
 
+    def test_api_alignment_solve_success(self):
+        """Test that the alignment solver runs successfully and returns correct structures."""
+        response = self.client.post(
+            reverse('primer:api_alignment_solve'),
+            data=json.dumps({
+                "seq1": "GATTACA",
+                "seq2": "GCATACU",
+                "match": 2,
+                "mismatch": -1,
+                "gap": -1,
+                "type": "global"
+            }),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertTrue(data["success"])
+        self.assertIn("matrix", data)
+        self.assertIn("path", data)
+        self.assertEqual(data["aligned1"], "G-ATTACA")
+        self.assertEqual(data["aligned2"], "GCA-TACU")
+

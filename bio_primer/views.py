@@ -12,6 +12,7 @@ from .models import PCRResult, ResultObject
 from .primer import get_primer_result
 from .sandbox import execute_code
 from .tutorial_loader import load_tutorials
+from .alignment import solve_alignment
 # Create your views here.
 
 
@@ -168,3 +169,27 @@ def api_sandbox_test(request):
 def api_tutorial_chapters(request):
     chapters = load_tutorials()
     return JsonResponse(chapters, safe=False)
+
+
+@csrf_exempt
+@require_POST
+def api_alignment_solve(request):
+    try:
+        data = json.loads(request.body)
+        seq1 = data.get("seq1", "").strip().upper()
+        seq2 = data.get("seq2", "").strip().upper()
+        match = int(data.get("match", 2))
+        mismatch = int(data.get("mismatch", -1))
+        gap = int(data.get("gap", -1))
+        align_type = data.get("type", "global")
+    except (json.JSONDecodeError, TypeError, KeyError, ValueError):
+        return JsonResponse({"success": False, "error": "Invalid parameters"}, status=400)
+        
+    if not seq1 or not seq2:
+        return JsonResponse({"success": False, "error": "Sequences seq1 and seq2 cannot be empty"}, status=400)
+        
+    result = solve_alignment(seq1, seq2, match, mismatch, gap, align_type)
+    return JsonResponse({
+        "success": True,
+        **result
+    })
