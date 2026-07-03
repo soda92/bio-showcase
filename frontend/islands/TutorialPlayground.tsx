@@ -181,8 +181,58 @@ export default function TutorialPlayground(
   const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
   const [fontSize, setFontSize] = useState(14); // Default to 14px
 
+  // Splitter and sidebar states
+  const [leftWidth, setLeftWidth] = useState(35); // Default to 35%
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
   const editorRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
+
+  // Load settings on mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedWidth = localStorage.getItem("bio-tutorial-left-width");
+      if (savedWidth) {
+        const val = parseFloat(savedWidth);
+        if (val >= 20 && val <= 70) {
+          setLeftWidth(val);
+        }
+      }
+      const savedCollapsed = localStorage.getItem("bio-tutorial-is-collapsed");
+      if (savedCollapsed) {
+        setIsCollapsed(savedCollapsed === "true");
+      }
+    }
+  }, []);
+
+  const toggleCollapse = () => {
+    setIsCollapsed(prev => {
+      const next = !prev;
+      localStorage.setItem("bio-tutorial-is-collapsed", String(next));
+      return next;
+    });
+  };
+
+  const startResizing = (mouseDownEvent: any) => {
+    mouseDownEvent.preventDefault();
+    
+    const handleMouseMove = (mouseMoveEvent: MouseEvent) => {
+      const containerWidth = window.innerWidth;
+      const newWidthPercent = (mouseMoveEvent.clientX / containerWidth) * 100;
+      if (newWidthPercent >= 20 && newWidthPercent <= 70) {
+        setLeftWidth(newWidthPercent);
+        localStorage.setItem("bio-tutorial-left-width", String(newWidthPercent));
+      }
+    };
+    
+    const handleMouseUp = () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+    
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+  };
 
   // Load font size from localStorage on mount
   useEffect(() => {
@@ -339,28 +389,42 @@ export default function TutorialPlayground(
   };
 
   return (
-    <main class="flex-grow w-full px-6 py-4 flex flex-col md:flex-row gap-4 h-[calc(100vh-56px)] overflow-hidden bg-gray-50">
+    <main class="flex-grow w-full flex flex-row h-[calc(100vh-56px)] overflow-hidden bg-gray-50 relative">
       {/* Left panel: Slide Content */}
-      <section class="w-full md:w-5/12 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full">
+      <section
+        style={{ width: isCollapsed ? "0px" : `${leftWidth}%`, display: isCollapsed ? "none" : "flex" }}
+        class="h-full bg-white border-r border-gray-200 flex-col flex-none overflow-hidden"
+      >
         {/* Step Selector Header */}
-        <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-6 py-4 flex-none">
-          <label class="block text-xs uppercase tracking-wider text-blue-200 font-semibold mb-1">
-            Bioinformatics Step {currentStep.id} of {TUTORIAL_STEPS.length}
-          </label>
-          <select
-            value={currentStepIndex}
-            onChange={(e) =>
-              setCurrentStepIndex(
-                parseInt((e.target as HTMLSelectElement).value),
-              )}
-            class="bg-blue-800 text-white font-bold py-1 px-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-300 w-full cursor-pointer"
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-6 py-3 flex-none flex items-center justify-between">
+          <div class="flex-grow mr-2">
+            <label class="block text-[10px] uppercase tracking-wider text-blue-200 font-semibold mb-0.5">
+              Bioinformatics Step {currentStep.id} of {TUTORIAL_STEPS.length}
+            </label>
+            <select
+              value={currentStepIndex}
+              onChange={(e) =>
+                setCurrentStepIndex(
+                  parseInt((e.target as HTMLSelectElement).value),
+                )}
+              class="bg-indigo-900 text-white font-bold text-xs py-1 px-1.5 rounded focus:outline-none focus:ring-2 focus:ring-blue-300 w-full cursor-pointer"
+            >
+              {TUTORIAL_STEPS.map((step, idx) => (
+                <option key={step.id} value={idx}>
+                  {step.id}. {step.title}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button
+            onClick={toggleCollapse}
+            title="Collapse Sidebar"
+            class="text-blue-200 hover:text-white p-1 hover:bg-blue-800 rounded transition-colors self-end mt-2"
           >
-            {TUTORIAL_STEPS.map((step, idx) => (
-              <option key={step.id} value={idx}>
-                {step.id}. {step.title}
-              </option>
-            ))}
-          </select>
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7M17 19l-7-7 7-7" />
+            </svg>
+          </button>
         </div>
 
         {/* Content Body */}
@@ -411,17 +475,37 @@ export default function TutorialPlayground(
         </div>
       </section>
 
+      {/* Vertical splitter bar */}
+      {!isCollapsed && (
+        <div
+          onMouseDown={startResizing}
+          class="w-1.5 hover:w-2 bg-gray-200 hover:bg-indigo-500 active:bg-indigo-600 cursor-col-resize h-full transition-all duration-75 flex-shrink-0 z-10 relative"
+          title="Drag to resize sidebar"
+        />
+      )}
+
       {/* Right panel: Editor & Terminal */}
-      <section class="w-full md:w-7/12 flex flex-col h-full gap-4 overflow-hidden">
+      <section class="flex-grow h-full flex flex-col gap-4 overflow-hidden p-4">
         {/* Editor Container */}
         <div class="flex-grow bg-[#1e1e1e] rounded-xl shadow-2xl border border-gray-800 overflow-hidden flex flex-col">
           {/* Editor Header */}
           <div class="bg-[#2d2d2d] px-4 py-2 flex justify-between items-center border-b border-gray-800">
             <div class="flex items-center space-x-2">
+              {isCollapsed && (
+                <button
+                  onClick={toggleCollapse}
+                  title="Expand Tutorial Sidebar"
+                  class="text-gray-400 hover:text-white mr-2 bg-[#3a3a3a] p-1 rounded hover:bg-indigo-900 transition-colors"
+                >
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M7 5l7 7-7 7" />
+                  </svg>
+                </button>
+              )}
               <span class="h-3 w-3 rounded-full bg-red-500"></span>
               <span class="h-3 w-3 rounded-full bg-yellow-500"></span>
               <span class="h-3 w-3 rounded-full bg-green-500"></span>
-              <span class="text-xs text-gray-400 font-mono ml-4">main.py</span>
+              <span class="text-xs text-gray-400 font-mono ml-2">main.py</span>
             </div>
             <div class="flex items-center space-x-3">
               <div class="flex items-center space-x-1 bg-[#1a1a1a] rounded px-1.5 py-0.5 border border-gray-800 select-none">
